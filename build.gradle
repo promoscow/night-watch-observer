@@ -1,3 +1,7 @@
+repositories {
+    maven { url 'http://fugru.com/archiva/repository/snapshots' }
+}
+
 plugins {
     id 'org.springframework.boot' version '2.1.3.RELEASE'
     id 'java'
@@ -23,6 +27,7 @@ dependencies {
     implementation 'org.springframework.kafka:spring-kafka'
 
     compile 'com.vk.api:sdk:0.5.12'
+    compile "org.springframework.social:spring-social-vkontakte:2.0.0.BUILD-SNAPSHOT"
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
