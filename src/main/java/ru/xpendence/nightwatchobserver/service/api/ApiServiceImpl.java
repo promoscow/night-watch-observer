@@ -1,4 +1,4 @@
-package ru.xpendence.nightwatchobserver.service;
+package ru.xpendence.nightwatchobserver.service.api;
 
 import com.vk.api.sdk.client.VkApiClient;
 import org.springframework.beans.factory.annotation.Autowired;

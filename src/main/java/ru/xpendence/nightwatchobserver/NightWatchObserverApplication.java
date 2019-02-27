@@ -1,13 +1,14 @@
 package ru.xpendence.nightwatchobserver;
 
-import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.DependsOn;
+
+import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @SpringBootApplication
 public class NightWatchObserverApplication {
@@ -19,5 +20,16 @@ public class NightWatchObserverApplication {
     @Bean
     public VkApiClient vkApiClient() {
         return new VkApiClient(HttpTransportClient.getInstance());
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration()
+                .setMatchingStrategy(MatchingStrategies.STRICT)
+                .setFieldMatchingEnabled(true)
+                .setSkipNullEnabled(true)
+                .setFieldAccessLevel(PRIVATE);
+        return mapper;
     }
 }

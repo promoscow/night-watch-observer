@@ -1,4 +1,4 @@
-package ru.xpendence.nightwatchobserver.service;
+package ru.xpendence.nightwatchobserver.service.api;
 
 /**
  * Author: Vyacheslav Chernyshov

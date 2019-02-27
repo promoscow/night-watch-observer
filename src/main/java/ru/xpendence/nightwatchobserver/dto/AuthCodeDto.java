@@ -1,0 +1,29 @@
+package ru.xpendence.nightwatchobserver.dto;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+/**
+ * Author: Vyacheslav Chernyshov
+ * Date: 27.02.19
+ * Time: 21:15
+ * e-mail: 2262288@gmail.com
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+public class AuthCodeDto extends AbstractDto {
+
+    private String code;
+    private String error;
+
+    private AuthCodeDto(String code, String error) {
+        this.code = code;
+        this.error = error;
+    }
+
+    public static AuthCodeDto of(String code, String error) {
+        return new AuthCodeDto(code, error);
+    }
+}
