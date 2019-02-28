@@ -4,6 +4,9 @@ plugins {
     id 'java'
     id 'war'
 }
+repositories {
+    maven { url 'http://fugru.com/archiva/repository/snapshots' }
+}
 
 apply plugin: 'io.spring.dependency-management'
 

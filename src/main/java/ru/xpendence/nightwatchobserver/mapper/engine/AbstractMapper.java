@@ -20,7 +20,7 @@ import java.util.Objects;
 public abstract class AbstractMapper<E extends AbstractEntity, D extends AbstractDto> implements EntityDtoMapper<E, D> {
 
     @Autowired
-    ModelMapper mapper;
+    public ModelMapper mapper;
 
     private Class<E> entityClass;
     private Class<D> dtoClass;
@@ -43,7 +43,7 @@ public abstract class AbstractMapper<E extends AbstractEntity, D extends Abstrac
                 : mapper.map(entity, dtoClass);
     }
 
-    Converter<E, D> toDtoConverter() {
+    public Converter<E, D> toDtoConverter() {
         return context -> {
             E source = context.getSource();
             D destination = context.getDestination();
@@ -52,7 +52,7 @@ public abstract class AbstractMapper<E extends AbstractEntity, D extends Abstrac
         };
     }
 
-    Converter<D, E> toEntityConverter() {
+    public Converter<D, E> toEntityConverter() {
         return context -> {
             D source = context.getSource();
             E destination = context.getDestination();
@@ -61,9 +61,9 @@ public abstract class AbstractMapper<E extends AbstractEntity, D extends Abstrac
         };
     }
 
-    void mapSpecificFields(E source, D destination) {
+    public void mapSpecificFields(E source, D destination) {
     }
 
-    void mapSpecificFields(D source, E destination) {
+    public void mapSpecificFields(D source, E destination) {
     }
 }

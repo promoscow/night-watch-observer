@@ -29,7 +29,4 @@ public abstract class AbstractDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     LocalDateTime updated;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String error;
 }

@@ -16,14 +16,12 @@ import lombok.NoArgsConstructor;
 public class AuthCodeDto extends AbstractDto {
 
     private String code;
-    private String error;
 
-    private AuthCodeDto(String code, String error) {
+    private AuthCodeDto(String code) {
         this.code = code;
-        this.error = error;
     }
 
-    public static AuthCodeDto of(String code, String error) {
-        return new AuthCodeDto(code, error);
+    public static AuthCodeDto of(String code) {
+        return new AuthCodeDto(code);
     }
 }
