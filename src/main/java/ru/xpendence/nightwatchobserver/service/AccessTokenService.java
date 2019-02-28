@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface AccessTokenService {
 
-    void save(AccessTokenDto dto);
+    AccessTokenDto save(AccessTokenDto dto);
 
     List<AccessTokenDto> getAll();
 }

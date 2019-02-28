@@ -1,6 +1,6 @@
 package ru.xpendence.nightwatchobserver.entity;
 
-import lombok.AllArgsConstructor;
+import com.google.common.collect.Lists;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,11 +18,18 @@ import java.util.List;
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = false)
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class User extends AbstractEntity {
 
     private List<AccessToken> accessTokens;
+
+    private User(List<AccessToken> accessTokens) {
+        this.accessTokens = accessTokens;
+    }
+
+    public static User of(AccessToken accessToken) {
+        return new User(Lists.newArrayList(accessToken));
+    }
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
     public List<AccessToken> getAccessTokens() {

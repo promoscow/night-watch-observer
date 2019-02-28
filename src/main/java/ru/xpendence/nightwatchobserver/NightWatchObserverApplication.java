@@ -11,6 +11,13 @@ import org.springframework.context.annotation.Bean;
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @SpringBootApplication
+//@ComponentScan(basePackages = {
+//        "ru.xpendence.nightwatchobserver.controller",
+//        "ru.xpendence.nightwatchobserver.dto",
+//        "ru.xpendence.nightwatchobserver.mapper",
+//        "ru.xpendence.nightwatchobserver.repository",
+//        "ru.xpendence.nightwatchobserver.service",
+//})
 public class NightWatchObserverApplication {
 
     public static void main(String[] args) {

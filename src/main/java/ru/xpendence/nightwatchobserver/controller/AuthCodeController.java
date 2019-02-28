@@ -29,9 +29,8 @@ public class AuthCodeController {
     }
 
     @GetMapping(value = "/save")
-    public void save(@RequestParam(name = "code", required = false) String code,
-                     @RequestParam(name = "error", required = false) String error) {
-        service.save(AuthCodeDto.of(code, error));
+    public ResponseEntity<AuthCodeDto> save(@RequestParam(name = "code", required = false) String code) {
+        return ResponseEntity.ok(service.save(AuthCodeDto.of(code)));
     }
 
     @GetMapping(value = "/all")

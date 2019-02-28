@@ -1,6 +1,7 @@
 package ru.xpendence.nightwatchobserver.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.service.AccessTokenService;
@@ -25,8 +26,8 @@ public class AccessTokenController {
     }
 
     @PostMapping(value = "/save")
-    public void save(@RequestBody AccessTokenDto dto) {
-        service.save(dto);
+    public ResponseEntity<AccessTokenDto> save(@RequestBody AccessTokenDto dto) {
+        return ResponseEntity.ok(service.save(dto));
     }
 
     @GetMapping(value = "/all")

@@ -3,10 +3,13 @@ package ru.xpendence.nightwatchobserver.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
+import ru.xpendence.nightwatchobserver.entity.AccessToken;
+import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.mapper.AccessTokenMapper;
 import ru.xpendence.nightwatchobserver.repository.AccessTokenRepository;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -20,21 +23,32 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     private final AccessTokenRepository repository;
     private final AccessTokenMapper mapper;
+    private final UserService userService;
 
     @Autowired
     public AccessTokenServiceImpl(AccessTokenRepository repository,
-                                  AccessTokenMapper mapper) {
+                                  AccessTokenMapper mapper,
+                                  UserService userService) {
         this.repository = repository;
         this.mapper = mapper;
+        this.userService = userService;
     }
 
     @Override
-    public void save(AccessTokenDto dto) {
-        repository.save(mapper.toEntity(dto));
+    public AccessTokenDto save(AccessTokenDto dto) {
+        AccessToken accessToken = mapper.toEntity(dto);
+        validateUser(accessToken, dto);
+        return mapper.toDto(repository.save(accessToken));
     }
 
     @Override
     public List<AccessTokenDto> getAll() {
         return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
+    private void validateUser(AccessToken accessToken, AccessTokenDto dto) {
+        if (Objects.nonNull(dto.getUserId()) && Objects.isNull(userService.getUser(dto.getUserId()))) {
+            accessToken.setUser(userService.saveUser(User.of(accessToken)));
+        }
     }
 }
