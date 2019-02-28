@@ -38,7 +38,7 @@ public class AccessTokenMapper extends AbstractMapper<AccessToken, AccessTokenDt
 
     @Override
     public void mapSpecificFields(AccessToken source, AccessTokenDto destination) {
-        if (Objects.nonNull(destination) && Objects.nonNull(destination.getUserId())) {
+        if (Objects.nonNull(source) && Objects.nonNull(source.getUser())) {
             destination.setUserId(source.getUser().getId());
         }
     }
