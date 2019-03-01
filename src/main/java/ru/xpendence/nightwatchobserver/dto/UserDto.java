@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 /**
  * Author: Vyacheslav Chernyshov
  * Date: 28.02.19
@@ -18,6 +16,6 @@ import java.util.List;
 public class UserDto extends AbstractDto {
 
     private Integer userId;
-    private List<AccessTokenDto> accessTokens;
-    private List<AuthCodeDto> accessCodes;
+    private AccessTokenDto accessToken;
+    private AuthCodeDto authCode;
 }

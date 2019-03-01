@@ -30,7 +30,7 @@ public class AuthCode extends AbstractEntity {
     }
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     public User getUser() {
         return user;
     }

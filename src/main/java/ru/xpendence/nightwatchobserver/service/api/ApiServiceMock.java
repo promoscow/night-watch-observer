@@ -14,7 +14,7 @@ import java.util.UUID;
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
 @Service
-@Profile("dev")
+@Profile(value = {"dev", "local-mock"})
 public class ApiServiceMock implements ApiService {
 
     @Override

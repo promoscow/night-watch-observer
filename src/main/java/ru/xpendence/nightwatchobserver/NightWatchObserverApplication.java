@@ -7,6 +7,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
@@ -18,6 +19,10 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 //        "ru.xpendence.nightwatchobserver.repository",
 //        "ru.xpendence.nightwatchobserver.service",
 //})
+@PropertySource(value = {
+        "classpath:vk.properties",
+        "classpath:kafka.properties"
+})
 public class NightWatchObserverApplication {
 
     public static void main(String[] args) {

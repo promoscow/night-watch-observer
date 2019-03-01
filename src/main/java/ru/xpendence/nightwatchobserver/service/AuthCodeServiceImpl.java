@@ -30,21 +30,18 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     private final ApiService apiService;
     private final UserService userService;
     private final AccessTokenService accessTokenService;
-    private final AuthCodeService authCodeService;
 
     @Autowired
     public AuthCodeServiceImpl(AuthCodeRepository repository,
                                AuthCodeMapper mapper,
                                ApiService apiService,
                                UserService userService,
-                               AccessTokenService accessTokenService,
-                               AuthCodeService authCodeService) {
+                               AccessTokenService accessTokenService) {
         this.repository = repository;
         this.mapper = mapper;
         this.apiService = apiService;
         this.userService = userService;
         this.accessTokenService = accessTokenService;
-        this.authCodeService = authCodeService;
     }
 
     @Override
@@ -55,12 +52,18 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         User user = apiService.authorize(authCode.getCode());
 
         user = userService.saveUser(user);
+        authCode.setUser(user);
         authCode = saveAuthCode(authCode);
 
-        AccessToken token = accessTokenService.saveAccessToken(user.getAccessToken());
+        AccessToken accessToken = user.getAccessToken();
+        accessToken.setUser(user);
+        AccessToken token = accessTokenService.saveAccessToken(accessToken);
 
         user.setAccessToken(token);
-        user.
+        user.setAuthCode(authCode);
+        user = userService.saveUser(user);
+
+        return mapper.toDto(authCode);
 
 //        AuthCode authCode = mapper.toEntity(dto);
 //        User userFromAuthorized = apiService.authorize(dto.getCode());

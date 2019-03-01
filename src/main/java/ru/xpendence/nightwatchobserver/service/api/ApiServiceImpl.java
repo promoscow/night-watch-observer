@@ -24,7 +24,7 @@ public class ApiServiceImpl implements ApiService {
 
     private final VkApiClient vk;
 
-    @Value("#{new Integer.parseInt('${app.id}')}")
+    @Value("${app.id}")
     private Integer appId;
 
     @Value("${client.secret}")
