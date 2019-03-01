@@ -3,6 +3,7 @@ package ru.xpendence.nightwatchobserver.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
+import ru.xpendence.nightwatchobserver.entity.AuthCode;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ import java.util.List;
 public interface AuthCodeService {
 
     AuthCodeDto save(AuthCodeDto dto);
+
+    AuthCode saveAuthCode(AuthCode code);
 
     List<AuthCodeDto> getAll();
 

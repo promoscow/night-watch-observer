@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
+import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.AuthCode;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.mapper.AuthCodeMapper;
@@ -29,18 +30,21 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     private final ApiService apiService;
     private final UserService userService;
     private final AccessTokenService accessTokenService;
+    private final AuthCodeService authCodeService;
 
     @Autowired
     public AuthCodeServiceImpl(AuthCodeRepository repository,
                                AuthCodeMapper mapper,
                                ApiService apiService,
                                UserService userService,
-                               AccessTokenService accessTokenService) {
+                               AccessTokenService accessTokenService,
+                               AuthCodeService authCodeService) {
         this.repository = repository;
         this.mapper = mapper;
         this.apiService = apiService;
         this.userService = userService;
         this.accessTokenService = accessTokenService;
+        this.authCodeService = authCodeService;
     }
 
     @Override
@@ -48,10 +52,15 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     public AuthCodeDto save(AuthCodeDto dto) {
 
         AuthCode authCode = mapper.toEntity(dto);
-        User userFromApi = apiService.authorize(authCode.getCode());
+        User user = apiService.authorize(authCode.getCode());
 
+        user = userService.saveUser(user);
+        authCode = saveAuthCode(authCode);
 
+        AccessToken token = accessTokenService.saveAccessToken(user.getAccessToken());
 
+        user.setAccessToken(token);
+        user.
 
 //        AuthCode authCode = mapper.toEntity(dto);
 //        User userFromAuthorized = apiService.authorize(dto.getCode());
@@ -61,6 +70,11 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 //        authCode.setUser(user);
 //        authCode = repository.save(authCode);
 //        return mapper.toDto(authCode);
+    }
+
+    @Override
+    public AuthCode saveAuthCode(AuthCode code) {
+        return repository.saveAndFlush(code);
     }
 
     @Override

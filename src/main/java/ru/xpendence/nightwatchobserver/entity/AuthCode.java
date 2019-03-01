@@ -29,7 +29,7 @@ public class AuthCode extends AbstractEntity {
         return code;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;

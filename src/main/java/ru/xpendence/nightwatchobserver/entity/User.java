@@ -5,9 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -25,6 +23,7 @@ public class User extends AbstractEntity {
     private Integer userId;
     private String email;
     private AccessToken accessToken;
+    private AuthCode authCode;
 
     private User(AccessToken accessToken) {
         this.accessToken = accessToken;
@@ -64,7 +63,15 @@ public class User extends AbstractEntity {
         return email;
     }
 
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     public AccessToken getAccessToken() {
         return accessToken;
+    }
+
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    public AuthCode getAuthCode() {
+        return authCode;
     }
 }
