@@ -1,12 +1,13 @@
 package ru.xpendence.nightwatchobserver.entity;
 
-import com.google.common.collect.Lists;
+import com.vk.api.sdk.client.actors.UserActor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -21,18 +22,49 @@ import java.util.List;
 @NoArgsConstructor
 public class User extends AbstractEntity {
 
-    private List<AccessToken> accessTokens;
+    private Integer userId;
+    private String email;
+    private AccessToken accessToken;
 
-    private User(List<AccessToken> accessTokens) {
-        this.accessTokens = accessTokens;
+    private User(AccessToken accessToken) {
+        this.accessToken = accessToken;
     }
 
-    public static User of(AccessToken accessToken) {
-        return new User(Lists.newArrayList(accessToken));
+    private User(Integer userId, AccessToken accessToken) {
+        this.userId = userId;
+        this.accessToken = accessToken;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
-    public List<AccessToken> getAccessTokens() {
-        return accessTokens;
+    private User(Integer userId, String email, AccessToken accessToken) {
+        this.userId = userId;
+        this.email = email;
+        this.accessToken = accessToken;
+    }
+
+    public static User ofAccessToken(AccessToken accessToken) {
+        return new User(accessToken);
+    }
+
+    public static User ofActor(UserActor actor) {
+        AccessToken accessToken = new AccessToken(actor.getAccessToken());
+        return new User(actor.getId(), accessToken);
+    }
+
+    public static User of(Integer userId, String email, String accessToken, Integer expiresIn) {
+        return new User(userId, email, new AccessToken(accessToken, expiresIn));
+    }
+
+    @Column(name = "user_id")
+    public Integer getUserId() {
+        return userId;
+    }
+
+    @Column(name = "email")
+    public String getEmail() {
+        return email;
+    }
+
+    public AccessToken getAccessToken() {
+        return accessToken;
     }
 }

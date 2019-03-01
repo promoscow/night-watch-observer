@@ -1,5 +1,7 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
+import ru.xpendence.nightwatchobserver.entity.User;
+
 /**
  * Author: Vyacheslav Chernyshov
  * Date: 26.02.19
@@ -8,5 +10,5 @@ package ru.xpendence.nightwatchobserver.service.api;
  */
 public interface ApiService {
 
-    void test();
+    User authorize(String code);
 }

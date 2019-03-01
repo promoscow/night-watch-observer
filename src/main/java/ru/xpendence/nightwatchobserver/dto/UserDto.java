@@ -17,5 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class UserDto extends AbstractDto {
 
+    private Integer userId;
     private List<AccessTokenDto> accessTokens;
+    private List<AuthCodeDto> accessCodes;
 }

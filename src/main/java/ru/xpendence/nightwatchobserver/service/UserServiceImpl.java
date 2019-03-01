@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto save(UserDto dto) {
-        return mapper.toDto(repository.save(mapper.toEntity(dto)));
+        User user = mapper.toEntity(dto);
+        return mapper.toDto(repository.save(user));
     }
 
     @Override
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAll() {
-        return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+        List<User> users = repository.findAll();
+        return users.stream().map(mapper::toDto).collect(Collectors.toList());
     }
 }

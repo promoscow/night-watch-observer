@@ -20,7 +20,7 @@ public class AccessTokenDto extends AbstractDto {
     private String accessToken;
 
     @JsonProperty(value = "expires_in")
-    private Long expiresIn;
+    private Integer expiresIn;
 
     @JsonProperty(value = "user_id")
     private Long userId;

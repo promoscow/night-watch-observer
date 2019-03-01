@@ -1,6 +1,7 @@
 package ru.xpendence.nightwatchobserver.service;
 
 import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
+import ru.xpendence.nightwatchobserver.entity.AccessToken;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ import java.util.List;
 public interface AccessTokenService {
 
     AccessTokenDto save(AccessTokenDto dto);
+
+    AccessToken saveAccessToken(AccessToken token);
 
     List<AccessTokenDto> getAll();
 }

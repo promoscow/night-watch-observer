@@ -5,7 +5,9 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -22,8 +24,11 @@ import javax.persistence.*;
 public class AccessToken extends AbstractEntity {
 
     private String accessToken;
-    private Long expiresIn;
-    private User user;
+    private Integer expiresIn;
+
+    public AccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
     @Column(name = "access_token")
     public String getAccessToken() {
@@ -31,13 +36,7 @@ public class AccessToken extends AbstractEntity {
     }
 
     @Column(name = "expires_in")
-    public Long getExpiresIn() {
+    public Integer getExpiresIn() {
         return expiresIn;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    public User getUser() {
-        return user;
     }
 }

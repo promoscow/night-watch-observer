@@ -5,9 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -24,9 +22,16 @@ import javax.persistence.Table;
 public class AuthCode extends AbstractEntity {
 
     private String code;
+    private User user;
 
     @Column(name = "code")
     public String getCode() {
         return code;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    public User getUser() {
+        return user;
     }
 }

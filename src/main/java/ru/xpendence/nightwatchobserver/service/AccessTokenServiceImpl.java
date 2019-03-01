@@ -38,8 +38,12 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     public AccessTokenDto save(AccessTokenDto dto) {
         AccessToken accessToken = mapper.toEntity(dto);
         validateUser(accessToken, dto);
-        AccessToken save = repository.save(accessToken);
-        return mapper.toDto(save);
+        return mapper.toDto(repository.save(accessToken));
+    }
+
+    @Override
+    public AccessToken saveAccessToken(AccessToken token) {
+        return repository.save(token);
     }
 
     @Override
@@ -49,7 +53,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     private void validateUser(AccessToken accessToken, AccessTokenDto dto) {
         if (Objects.nonNull(dto.getUserId()) && Objects.isNull(userService.getUser(dto.getUserId()))) {
-            accessToken.setUser(userService.saveUser(User.of(accessToken)));
+            accessToken.setUser(userService.saveUser(User.ofAccessToken(accessToken)));
         }
     }
 }
