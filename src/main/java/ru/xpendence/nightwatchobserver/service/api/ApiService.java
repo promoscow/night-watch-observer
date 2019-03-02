@@ -1,5 +1,8 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
+import com.vk.api.sdk.client.actors.UserActor;
+import org.springframework.transaction.annotation.Transactional;
+import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.User;
 
 /**
@@ -11,4 +14,16 @@ import ru.xpendence.nightwatchobserver.entity.User;
 public interface ApiService {
 
     User authorize(String code);
+
+    @Transactional
+    Boolean scan(Long userId);
+
+    @Transactional
+    void scanAll();
+
+    boolean validateAccessToken(AccessToken accessToken);
+
+    UserActor getActorByUserId(Long userId);
+
+
 }

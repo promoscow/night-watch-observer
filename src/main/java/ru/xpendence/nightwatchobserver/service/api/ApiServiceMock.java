@@ -1,9 +1,13 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
+import com.vk.api.sdk.client.actors.UserActor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.entity.User;
+import ru.xpendence.nightwatchobserver.repository.UserRepository;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -14,8 +18,20 @@ import java.util.UUID;
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
 @Service
-@Profile(value = {"dev", "local-mock"})
-public class ApiServiceMock implements ApiService {
+@Profile(value = {"dev", "local-mock", "remote-mock"})
+@Slf4j
+public class ApiServiceMock extends AbstractApiService {
+
+    public ApiServiceMock(UserRepository userRepository) {
+        super(userRepository);
+    }
+
+    @Override
+    public Boolean scan(Long userId) {
+        UserActor userActor = getActorByUserId(userId);
+        log.info("Create userActor with parameters: {}", userActor.toString());
+        return Objects.nonNull(userActor);
+    }
 
     @Override
     public User authorize(String code) {

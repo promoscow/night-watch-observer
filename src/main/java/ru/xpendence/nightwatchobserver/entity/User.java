@@ -4,8 +4,11 @@ import com.vk.api.sdk.client.actors.UserActor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -18,12 +21,15 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = false)
 @Setter
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE users SET active = 0 WHERE id = ?")
+@Where(clause = "active = 1")
 public class User extends AbstractEntity {
 
     private Integer userId;
     private String email;
     private AccessToken accessToken;
     private AuthCode authCode;
+    private List<WallPost> posts;
 
     private User(AccessToken accessToken) {
         this.accessToken = accessToken;
@@ -73,5 +79,10 @@ public class User extends AbstractEntity {
     @PrimaryKeyJoinColumn
     public AuthCode getAuthCode() {
         return authCode;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL)
+    public List<WallPost> getPosts() {
+        return posts;
     }
 }

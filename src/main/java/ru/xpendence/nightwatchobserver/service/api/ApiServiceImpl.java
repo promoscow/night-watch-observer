@@ -1,15 +1,22 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
 import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.UserAuthResponse;
+import com.vk.api.sdk.objects.wall.WallPostFull;
+import com.vk.api.sdk.objects.wall.responses.GetRepostsResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.exception.AuthException;
+import ru.xpendence.nightwatchobserver.repository.UserRepository;
+
+import java.util.List;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -19,7 +26,8 @@ import ru.xpendence.nightwatchobserver.exception.AuthException;
  */
 @Service
 @Profile("local")
-public class ApiServiceImpl implements ApiService {
+@Slf4j
+public class ApiServiceImpl extends AbstractApiService {
 
     private final VkApiClient vk;
 
@@ -33,7 +41,9 @@ public class ApiServiceImpl implements ApiService {
     private String redirectUri;
 
     @Autowired
-    public ApiServiceImpl(VkApiClient vk) {
+    public ApiServiceImpl(UserRepository userRepository,
+                          VkApiClient vk) {
+        super(userRepository);
         this.vk = vk;
     }
 
@@ -47,6 +57,30 @@ public class ApiServiceImpl implements ApiService {
                 authResponse.getAccessToken(),
                 authResponse.getExpiresIn()
         );
+    }
+
+    @Override
+    public Boolean scan(Long userId) {
+        UserActor userActor = getActorByUserId(userId);
+        log.info("Create userActor with parameters: {}", userActor.toString());
+
+        GetRepostsResponse response = obtainPosts(userActor);
+        List<WallPostFull> wallPosts = response.getItems();
+
+        return true;
+    }
+
+    private GetRepostsResponse obtainPosts(UserActor userActor) {
+        GetRepostsResponse response = null;
+        try {
+            response = vk
+                    .wall()
+                    .getReposts(userActor)
+                    .execute();
+        } catch (ApiException | ClientException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     private UserAuthResponse obtainUserAuthResponse(String code) {

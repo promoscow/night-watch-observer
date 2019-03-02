@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * Author: Vyacheslav Chernyshov
  * Date: 28.02.19
@@ -20,8 +22,11 @@ public class AccessTokenDto extends AbstractDto {
     private String accessToken;
 
     @JsonProperty(value = "expires_in")
-    private Integer expiresIn;
+    private LocalDateTime expiresIn;
 
     @JsonProperty(value = "user_id")
     private Long userId;
+
+    @JsonProperty(value = "external")
+    private Boolean external;
 }

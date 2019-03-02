@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.xpendence.nightwatchobserver.attributes.ActiveType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,6 +25,7 @@ public abstract class AbstractEntity implements Serializable {
     Long id;
     LocalDateTime created;
     LocalDateTime updated;
+    ActiveType activeType = ActiveType.ENABLED;
     String error;
 
     @Id
@@ -45,6 +47,11 @@ public abstract class AbstractEntity implements Serializable {
     @Column(name = "error")
     public String getError() {
         return error;
+    }
+
+    @Column(name = "active")
+    public ActiveType getActiveType() {
+        return activeType;
     }
 
     @PrePersist

@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
@@ -23,6 +24,7 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
         "classpath:vk.properties",
         "classpath:kafka.properties"
 })
+@EnableScheduling
 public class NightWatchObserverApplication {
 
     public static void main(String[] args) {

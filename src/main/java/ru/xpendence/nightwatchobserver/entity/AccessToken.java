@@ -4,8 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -16,14 +19,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "access_tokens")
 @EqualsAndHashCode(callSuper = false)
+@Where(clause = "active = 1")
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@SQLDelete(sql = "UPDATE access_tokens SET active = 0 WHERE id = ?")
 public class AccessToken extends AbstractEntity {
 
     private String accessToken;
-    private Integer expiresIn;
+    private LocalDateTime expiresIn;
     private User user;
+    private Boolean external;
 
     public AccessToken(String accessToken) {
         this.accessToken = accessToken;
@@ -31,7 +37,7 @@ public class AccessToken extends AbstractEntity {
 
     public AccessToken(String accessToken, Integer expiresIn) {
         this.accessToken = accessToken;
-        this.expiresIn = expiresIn;
+        this.expiresIn = LocalDateTime.now().plusSeconds(expiresIn.longValue());
     }
 
     @Column(name = "access_token")
@@ -40,7 +46,7 @@ public class AccessToken extends AbstractEntity {
     }
 
     @Column(name = "expires_in")
-    public Integer getExpiresIn() {
+    public LocalDateTime getExpiresIn() {
         return expiresIn;
     }
 
@@ -48,5 +54,10 @@ public class AccessToken extends AbstractEntity {
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
+    }
+
+    @Column(name = "external")
+    public Boolean getExternal() {
+        return external;
     }
 }
