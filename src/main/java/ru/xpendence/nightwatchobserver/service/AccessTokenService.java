@@ -18,4 +18,6 @@ public interface AccessTokenService {
     AccessToken saveAccessToken(AccessToken token);
 
     List<AccessTokenDto> getAll();
+
+    List<AccessToken> getAllAlive();
 }

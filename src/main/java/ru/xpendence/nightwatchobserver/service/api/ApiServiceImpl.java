@@ -1,5 +1,7 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
@@ -47,6 +49,7 @@ public class ApiServiceImpl extends AbstractApiService {
     private final WallPostRepository wallPostRepository;
     private final UserService userService;
     private final WallPostPhotoRepository wallPostPhotoRepository;
+    private final ObjectMapper objectMapper;
 
     @Value("${app.id}")
     private Integer appId;
@@ -65,12 +68,14 @@ public class ApiServiceImpl extends AbstractApiService {
                           VkApiClient vk,
                           WallPostRepository wallPostRepository,
                           UserService userService,
-                          WallPostPhotoRepository wallPostPhotoRepository) {
+                          WallPostPhotoRepository wallPostPhotoRepository,
+                          ObjectMapper objectMapper) {
         super(userRepository);
         this.vk = vk;
         this.wallPostRepository = wallPostRepository;
         this.userService = userService;
         this.wallPostPhotoRepository = wallPostPhotoRepository;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -99,6 +104,19 @@ public class ApiServiceImpl extends AbstractApiService {
         return !posts.isEmpty();
     }
 
+    @Async
+    @Override
+    public void send(ToRecognitionDto dto) {
+        ResponseEntity<String> response = new RestTemplate().postForEntity(siteRecognitionUrl, dto, String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            log.info("Sent successfully: {}\nResponse status: {}\nMessage: {}",
+                    toJson(dto), response.getStatusCodeValue(), response.getBody());
+        } else {
+            log.info("Sending failed: {}\nResponse status: {}\nMessage: {}",
+                    toJson(dto), response.getStatusCodeValue(), response.getBody());
+        }
+    }
+
     private void sendToRecognition(List<WallPost> posts) {
         if (!posts.isEmpty()) {
             posts
@@ -107,20 +125,6 @@ public class ApiServiceImpl extends AbstractApiService {
                     .flatMap(p -> p.getPhotos().stream())
                     .map(this::transformToToRecognitionDto)
                     .forEach(this::send);
-        }
-    }
-
-    @Async
-    @Override
-    public void send(ToRecognitionDto toRecognitionDto) {
-        ResponseEntity<String> response = new RestTemplate().postForEntity(siteRecognitionUrl, toRecognitionDto, String.class);
-        if (response.getStatusCode().is2xxSuccessful()) {
-            log.info("Sent successfully: {}\nResponse status: {}\nMessage: {}",
-                    toRecognitionDto.toString(), response.getStatusCodeValue(), response.getBody());
-        } else {
-            log.info("Sending failed: {}\nResponse status: {}\nMessage: {}",
-                    toRecognitionDto.toString(),
-                    response.getStatusCodeValue(), response.getBody());
         }
     }
 
@@ -208,5 +212,14 @@ public class ApiServiceImpl extends AbstractApiService {
             ));
         }
         return authResponse;
+    }
+
+    private String toJson(ToRecognitionDto dto) {
+        try {
+            return objectMapper.writeValueAsString(dto);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

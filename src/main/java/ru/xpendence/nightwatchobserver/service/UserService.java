@@ -24,4 +24,6 @@ public interface UserService {
     List<UserDto> getAll();
 
     User getById(Long userId);
+
+    List<User> getAllAlive();
 }

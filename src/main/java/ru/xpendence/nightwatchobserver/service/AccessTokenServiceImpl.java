@@ -8,6 +8,7 @@ import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.mapper.AccessTokenMapper;
 import ru.xpendence.nightwatchobserver.repository.AccessTokenRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,6 +50,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     public List<AccessTokenDto> getAll() {
         return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<AccessToken> getAllAlive() {
+        return repository.findAllByExternalOrExpiresInAfter(true, LocalDateTime.now());
     }
 
     private void validateUser(AccessToken accessToken, AccessTokenDto dto) {

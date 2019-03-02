@@ -65,4 +65,9 @@ public class UserServiceImpl implements UserService {
                 () -> new UserException(String.format("User not found by id: %d", userId))
         );
     }
+
+    @Override
+    public List<User> getAllAlive() {
+        return repository.findAllAliveUsers();
+    }
 }

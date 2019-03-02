@@ -1,5 +1,6 @@
 package ru.xpendence.nightwatchobserver;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vk.api.sdk.client.VkApiClient;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import org.modelmapper.ModelMapper;
@@ -17,7 +18,8 @@ import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 @PropertySource(value = {
         "classpath:vk.properties",
         "classpath:kafka.properties",
-        "classpath:site.properties"
+        "classpath:site.properties",
+        "classpath:scheduled.properties"
 })
 @EnableAsync
 @EnableScheduling
@@ -41,5 +43,10 @@ public class NightWatchObserverApplication {
                 .setSkipNullEnabled(true)
                 .setFieldAccessLevel(PRIVATE);
         return mapper;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }
