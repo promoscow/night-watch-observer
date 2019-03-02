@@ -64,15 +64,6 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         user = userService.saveUser(user);
 
         return mapper.toDto(authCode);
-
-//        AuthCode authCode = mapper.toEntity(dto);
-//        User userFromAuthorized = apiService.authorize(dto.getCode());
-//        AccessToken savedAccessToken = accessTokenService.saveAccessToken(userFromAuthorized.getAccessTokens().get(0));
-//        userFromAuthorized.addAccessToken(savedAccessToken);
-//        User user = userService.saveUser(userFromAuthorized);
-//        authCode.setUser(user);
-//        authCode = repository.save(authCode);
-//        return mapper.toDto(authCode);
     }
 
     @Override

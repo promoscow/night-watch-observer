@@ -8,7 +8,8 @@ import com.vk.api.sdk.objects.UserAuthResponse;
 import com.vk.api.sdk.objects.photos.Photo;
 import com.vk.api.sdk.objects.wall.WallPostFull;
 import com.vk.api.sdk.objects.wall.WallpostAttachment;
-import com.vk.api.sdk.objects.wall.responses.GetRepostsResponse;
+import com.vk.api.sdk.objects.wall.responses.GetResponse;
+import com.vk.api.sdk.queries.wall.WallGetFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
  * e-mail: 2262288@gmail.com
  */
 @Service
-@Profile("local")
+@Profile({"local", "remote"})
 @Slf4j
 public class ApiServiceImpl extends AbstractApiService {
 
@@ -82,7 +83,7 @@ public class ApiServiceImpl extends AbstractApiService {
         UserActor userActor = getActorByUserId(userId);
         log.info("Created userActor with parameters: {}", userActor.toString());
 
-        GetRepostsResponse response = obtainPosts(userActor);
+        GetResponse response = obtainPosts(userActor);
         List<WallPostFull> wallPosts = response.getItems();
         log.info("Obtained posts: {}", wallPosts);
         List<WallPost> existingPosts = wallPostRepository.findAllByUserId(userId);
@@ -110,12 +111,15 @@ public class ApiServiceImpl extends AbstractApiService {
                 wallPostFull.getText(),
                 user
         );
-        wallPost.setPhotos(getWallPostPhotos(wallPostFull.getAttachments(), wallPost));
+        if (Objects.isNull(wallPostFull.getCopyHistory()) || wallPostFull.getCopyHistory().isEmpty()) {
+            return wallPost;
+        }
+        wallPost.setPhotos(getWallPostPhotos(wallPostFull.getCopyHistory().get(0).getAttachments(), wallPost));
         return wallPost;
     }
 
     private List<WallPostPhoto> getWallPostPhotos(List<WallpostAttachment> attachments, WallPost wallPost) {
-        return wallPostPhotoRepository.saveAll(attachments
+        return Objects.isNull(attachments) ? null : wallPostPhotoRepository.saveAll(attachments
                 .stream()
                 .filter(a -> Objects.nonNull(a.getPhoto()))
                 .map(a -> getPhotoAsWallPostPhoto(a.getPhoto(), wallPost))
@@ -130,18 +134,20 @@ public class ApiServiceImpl extends AbstractApiService {
         return postIds.stream().anyMatch(p -> p.equals(id));
     }
 
-    private GetRepostsResponse obtainPosts(UserActor userActor) {
-        GetRepostsResponse response = null;
+    private GetResponse obtainPosts(UserActor userActor) {
+        GetResponse response1 = null;
         try {
-            response = vk
+            response1 = vk
                     .wall()
-                    .getReposts(userActor)
+                    .get(userActor)
+                    .ownerId(userActor.getId())
                     .count(10)
+                    .filter(WallGetFilter.ALL)
                     .execute();
         } catch (ApiException | ClientException e) {
             e.printStackTrace();
         }
-        return response;
+        return response1;
     }
 
     private UserAuthResponse obtainUserAuthResponse(String code) {
