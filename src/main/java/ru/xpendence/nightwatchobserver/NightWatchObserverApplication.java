@@ -8,22 +8,18 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import static org.modelmapper.config.Configuration.AccessLevel.PRIVATE;
 
 @SpringBootApplication
-//@ComponentScan(basePackages = {
-//        "ru.xpendence.nightwatchobserver.controller",
-//        "ru.xpendence.nightwatchobserver.dto",
-//        "ru.xpendence.nightwatchobserver.mapper",
-//        "ru.xpendence.nightwatchobserver.repository",
-//        "ru.xpendence.nightwatchobserver.service",
-//})
 @PropertySource(value = {
         "classpath:vk.properties",
-        "classpath:kafka.properties"
+        "classpath:kafka.properties",
+        "classpath:site.properties"
 })
+@EnableAsync
 @EnableScheduling
 public class NightWatchObserverApplication {
 

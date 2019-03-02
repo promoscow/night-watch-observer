@@ -4,6 +4,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
 
@@ -31,6 +32,10 @@ public class ApiServiceMock extends AbstractApiService {
         UserActor userActor = getActorByUserId(userId);
         log.info("Create userActor with parameters: {}", userActor.toString());
         return Objects.nonNull(userActor);
+    }
+
+    @Override
+    public void send(ToRecognitionDto dto) {
     }
 
     @Override

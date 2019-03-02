@@ -14,7 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.entity.WallPost;
 import ru.xpendence.nightwatchobserver.entity.WallPostPhoto;
@@ -53,6 +57,9 @@ public class ApiServiceImpl extends AbstractApiService {
     @Value("${redirect.auth.uri}")
     private String redirectUri;
 
+    @Value("${site.recognition.url}")
+    private String siteRecognitionUrl;
+
     @Autowired
     public ApiServiceImpl(UserRepository userRepository,
                           VkApiClient vk,
@@ -69,7 +76,6 @@ public class ApiServiceImpl extends AbstractApiService {
     @Override
     public User authorize(String code) {
         UserAuthResponse authResponse = obtainUserAuthResponse(code);
-//        UserActor actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
         return User.of(
                 authResponse.getUserId(),
                 authResponse.getEmail(),
@@ -89,8 +95,44 @@ public class ApiServiceImpl extends AbstractApiService {
         List<WallPost> existingPosts = wallPostRepository.findAllByUserId(userId);
         User user = userService.getById(userId);
         List<WallPost> posts = transformPosts(wallPosts, existingPosts, user);
+        sendToRecognition(posts);
         return !posts.isEmpty();
     }
+
+    private void sendToRecognition(List<WallPost> posts) {
+        if (!posts.isEmpty()) {
+            posts
+                    .stream()
+                    .filter(p -> Objects.nonNull(p.getPhotos()) && !p.getPhotos().isEmpty())
+                    .flatMap(p -> p.getPhotos().stream())
+                    .map(this::transformToToRecognitionDto)
+                    .forEach(this::send);
+        }
+    }
+
+    @Async
+    @Override
+    public void send(ToRecognitionDto toRecognitionDto) {
+        ResponseEntity<String> response = new RestTemplate().postForEntity(siteRecognitionUrl, toRecognitionDto, String.class);
+        if (response.getStatusCode().is2xxSuccessful()) {
+            log.info("Sent successfully: {}\nResponse status: {}\nMessage: {}",
+                    toRecognitionDto.toString(), response.getStatusCodeValue(), response.getBody());
+        } else {
+            log.info("Sending failed: {}\nResponse status: {}\nMessage: {}",
+                    toRecognitionDto.toString(),
+                    response.getStatusCodeValue(), response.getBody());
+        }
+    }
+
+    private ToRecognitionDto transformToToRecognitionDto(WallPostPhoto wallPostPhoto) {
+        return ToRecognitionDto.of(
+                wallPostPhoto.getId(),
+                wallPostPhoto.getPhoto604Url(),
+                wallPostPhoto.getPost().getId(),
+                wallPostPhoto.getPost().getOwnerId()
+        );
+    }
+
 
     // TODO: 02.03.19 переписать через SQL-запросы
     private List<WallPost> transformPosts(List<WallPostFull> wallPosts, List<WallPost> existingPosts, User user) {
