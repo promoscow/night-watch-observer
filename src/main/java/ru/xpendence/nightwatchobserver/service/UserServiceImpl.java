@@ -58,4 +58,11 @@ public class UserServiceImpl implements UserService {
         List<User> users = repository.findAll();
         return users.stream().map(mapper::toDto).collect(Collectors.toList());
     }
+
+    @Override
+    public User getById(Long userId) {
+        return repository.findById(userId).orElseThrow(
+                () -> new UserException(String.format("User not found by id: %d", userId))
+        );
+    }
 }

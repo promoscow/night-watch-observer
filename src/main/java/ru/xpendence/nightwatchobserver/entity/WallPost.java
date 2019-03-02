@@ -32,6 +32,19 @@ public class WallPost extends AbstractEntity {
     private List<WallPostPhoto> photos;
     private User user;
 
+    private WallPost(Integer postId, Integer fromId, Integer ownerId, Integer date, String text, User user) {
+        this.postId = postId;
+        this.fromId = fromId;
+        this.ownerId = ownerId;
+        this.date = date;
+        this.text = text;
+        this.user = user;
+    }
+
+    public static WallPost ofWallPostFull(Integer postId, Integer fromId, Integer ownerId, Integer date, String text, User user) {
+        return new WallPost(postId, fromId, ownerId, date, text, user);
+    }
+
     @Column(name = "post_id")
     public Integer getPostId() {
         return postId;

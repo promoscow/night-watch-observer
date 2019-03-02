@@ -27,6 +27,16 @@ public class WallPostPhoto extends AbstractEntity {
     private String photo604Url;
     private WallPost post;
 
+    private WallPostPhoto(Integer photoId, String photo604Url, WallPost post) {
+        this.photoId = photoId;
+        this.photo604Url = photo604Url;
+        this.post = post;
+    }
+
+    public static WallPostPhoto of(Integer photoId, String photo604Url, WallPost post) {
+        return new WallPostPhoto(photoId, photo604Url, post);
+    }
+
     @Column(name = "photo_id")
     public Integer getPhotoId() {
         return photoId;
