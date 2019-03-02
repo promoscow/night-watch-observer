@@ -1,7 +1,6 @@
 package ru.xpendence.nightwatchobserver.service.api;
 
 import com.vk.api.sdk.client.VkApiClient;
-import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import com.vk.api.sdk.objects.UserAuthResponse;
@@ -41,8 +40,13 @@ public class ApiServiceImpl implements ApiService {
     @Override
     public User authorize(String code) {
         UserAuthResponse authResponse = obtainUserAuthResponse(code);
-        UserActor actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
-        return User.ofActor(actor);
+//        UserActor actor = new UserActor(authResponse.getUserId(), authResponse.getAccessToken());
+        return User.of(
+                authResponse.getUserId(),
+                authResponse.getEmail(),
+                authResponse.getAccessToken(),
+                authResponse.getExpiresIn()
+        );
     }
 
     private UserAuthResponse obtainUserAuthResponse(String code) {
