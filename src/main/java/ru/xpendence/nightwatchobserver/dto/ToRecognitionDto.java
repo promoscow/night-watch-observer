@@ -17,15 +17,17 @@ public class ToRecognitionDto {
     private String url;
     private Long postId;
     private Integer authorId;
+    private String text;
 
-    private ToRecognitionDto(Long externalId, String url, Long postId, Integer authorId) {
+    private ToRecognitionDto(Long externalId, String url, Long postId, Integer authorId, String text) {
         this.externalId = externalId;
         this.url = url;
         this.postId = postId;
         this.authorId = authorId;
+        this.text = text;
     }
 
-    public static ToRecognitionDto of(Long externalId, String url, Long postId, Integer authorId) {
-        return new ToRecognitionDto(externalId, url, postId, authorId);
+    public static ToRecognitionDto of(Long externalId, String url, Long postId, Integer authorId, String text) {
+        return new ToRecognitionDto(externalId, url, postId, authorId, text);
     }
 }

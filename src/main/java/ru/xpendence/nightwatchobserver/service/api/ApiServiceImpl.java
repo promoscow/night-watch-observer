@@ -133,7 +133,8 @@ public class ApiServiceImpl extends AbstractApiService {
                 wallPostPhoto.getId(),
                 wallPostPhoto.getPhoto604Url(),
                 wallPostPhoto.getPost().getId(),
-                wallPostPhoto.getPost().getOwnerId()
+                wallPostPhoto.getPost().getOwnerId(),
+                wallPostPhoto.getPost().getText()
         );
     }
 
