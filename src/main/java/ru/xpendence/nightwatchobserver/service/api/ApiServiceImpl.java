@@ -96,7 +96,7 @@ public class ApiServiceImpl extends AbstractApiService {
 
         GetResponse response = obtainPosts(userActor);
         List<WallPostFull> wallPosts = response.getItems();
-        log.info("Obtained posts: {}", wallPosts);
+        log.info("Obtained posts: {}", wallPosts.size());
         List<WallPost> existingPosts = wallPostRepository.findAllByUserId(userId);
         User user = userService.getById(userId);
         List<WallPost> posts = transformPosts(wallPosts, existingPosts, user);

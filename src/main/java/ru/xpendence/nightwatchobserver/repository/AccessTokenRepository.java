@@ -17,4 +17,6 @@ import java.util.List;
 public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> {
 
     List<AccessToken> findAllByExternalOrExpiresInAfter(boolean external, LocalDateTime expiresIn);
+
+    void deleteAllByExternalFalseAndExpiresInBefore(LocalDateTime localDateTime);
 }

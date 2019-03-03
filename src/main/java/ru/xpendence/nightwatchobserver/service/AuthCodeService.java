@@ -26,4 +26,6 @@ public interface AuthCodeService {
     AuthCodeDto getLast();
 
     AuthCodeDto get(Long id);
+
+    void deleteUsed();
 }

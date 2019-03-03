@@ -20,4 +20,6 @@ public interface AccessTokenService {
     List<AccessTokenDto> getAll();
 
     List<AccessToken> getAllAlive();
+
+    void deleteExpired();
 }

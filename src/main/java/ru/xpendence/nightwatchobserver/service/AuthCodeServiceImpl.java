@@ -3,6 +3,7 @@ package ru.xpendence.nightwatchobserver.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
@@ -14,6 +15,7 @@ import ru.xpendence.nightwatchobserver.repository.AuthCodeRepository;
 import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -89,5 +91,15 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     @Override
     public AuthCodeDto get(Long id) {
         return null;
+    }
+
+    @Override
+    @Scheduled(cron = "20 * * * * ?")
+    @Transactional
+    public void deleteUsed() {
+        repository.deleteAll(repository.findAll()
+                .stream()
+                .filter(a -> Objects.nonNull(a.getUser().getAccessToken()))
+                .collect(Collectors.toList()));
     }
 }
