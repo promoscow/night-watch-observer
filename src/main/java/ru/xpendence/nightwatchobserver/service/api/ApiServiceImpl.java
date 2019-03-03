@@ -155,13 +155,16 @@ public class ApiServiceImpl extends AbstractApiService {
                 wallPostFull.getFromId(),
                 wallPostFull.getOwnerId(),
                 wallPostFull.getDate(),
-                wallPostFull.getText(),
                 user
         );
         if (Objects.isNull(wallPostFull.getCopyHistory()) || wallPostFull.getCopyHistory().isEmpty()) {
             return wallPost;
         }
-        wallPost.setPhotos(getWallPostPhotos(wallPostFull.getCopyHistory().get(0).getAttachments(), wallPost));
+        com.vk.api.sdk.objects.wall.WallPost originalPost = wallPostFull.getCopyHistory().get(0);
+//        wallPost.setText(originalPost.getText());
+        wallPost.setOriginalPostId(originalPost.getId());
+        wallPost.setOriginalOwnerPostId(originalPost.getOwnerId());
+        wallPost.setPhotos(getWallPostPhotos(originalPost.getAttachments(), wallPost));
         return wallPost;
     }
 

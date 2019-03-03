@@ -31,18 +31,19 @@ public class WallPost extends AbstractEntity {
     private String text;
     private List<WallPostPhoto> photos;
     private User user;
+    private Integer originalOwnerPostId;
+    private Integer originalPostId;
 
-    private WallPost(Integer postId, Integer fromId, Integer ownerId, Integer date, String text, User user) {
+    private WallPost(Integer postId, Integer fromId, Integer ownerId, Integer date, User user) {
         this.postId = postId;
         this.fromId = fromId;
         this.ownerId = ownerId;
         this.date = date;
-        this.text = text;
         this.user = user;
     }
 
-    public static WallPost ofWallPostFull(Integer postId, Integer fromId, Integer ownerId, Integer date, String text, User user) {
-        return new WallPost(postId, fromId, ownerId, date, text, user);
+    public static WallPost ofWallPostFull(Integer postId, Integer fromId, Integer ownerId, Integer date, User user) {
+        return new WallPost(postId, fromId, ownerId, date, user);
     }
 
     @Column(name = "post_id")
@@ -65,7 +66,7 @@ public class WallPost extends AbstractEntity {
         return date;
     }
 
-    @Column(name = "text")
+    @Column(name = "text", length = 4000)
     public String getText() {
         return text;
     }
@@ -79,5 +80,15 @@ public class WallPost extends AbstractEntity {
     @JoinColumn(name = "user_id")
     public User getUser() {
         return user;
+    }
+
+    @Column(name = "original_owner_post_id")
+    public Integer getOriginalOwnerPostId() {
+        return originalOwnerPostId;
+    }
+
+    @Column(name = "original_post_id")
+    public Integer getOriginalPostId() {
+        return originalPostId;
     }
 }
