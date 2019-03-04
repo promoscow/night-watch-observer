@@ -3,7 +3,6 @@ package ru.xpendence.nightwatchobserver.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
@@ -94,7 +93,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     }
 
     @Override
-    @Scheduled(cron = "20 * * * * ?")
+//    @Scheduled(cron = "20 * * * * ?")
     @Transactional
     public void deleteUsed() {
         repository.deleteAll(repository.findAll()

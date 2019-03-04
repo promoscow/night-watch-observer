@@ -1,7 +1,6 @@
 package ru.xpendence.nightwatchobserver.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.entity.AccessToken;
@@ -59,7 +58,7 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-    @Scheduled(cron = "30 * * * * ?")
+//    @Scheduled(cron = "30 * * * * ?")
     public void deleteExpired() {
         repository.deleteAllByExternalFalseAndExpiresInBefore(LocalDateTime.now());
     }

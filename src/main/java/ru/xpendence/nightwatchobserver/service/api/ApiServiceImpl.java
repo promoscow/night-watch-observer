@@ -100,6 +100,7 @@ public class ApiServiceImpl extends AbstractApiService {
         List<WallPost> existingPosts = wallPostRepository.findAllByUserId(userId);
         User user = userService.getById(userId);
         List<WallPost> posts = transformPosts(wallPosts, existingPosts, user);
+        log.info("< --- preparing to send {} posts", posts.size());
         sendToRecognition(posts);
         return !posts.isEmpty();
     }
@@ -107,6 +108,7 @@ public class ApiServiceImpl extends AbstractApiService {
     @Async
     @Override
     public void send(ToRecognitionDto dto) {
+        log.info("--- > Sending dto: {}", dto.toString());
         ResponseEntity<String> response = new RestTemplate().postForEntity(siteRecognitionUrl, dto, String.class);
         if (response.getStatusCode().is2xxSuccessful()) {
             log.info("Sent successfully: {}\nResponse status: {}\nMessage: {}",
@@ -141,12 +143,19 @@ public class ApiServiceImpl extends AbstractApiService {
 
     // TODO: 02.03.19 переписать через SQL-запросы
     private List<WallPost> transformPosts(List<WallPostFull> wallPosts, List<WallPost> existingPosts, User user) {
+        log.info("wallPosts count: {}", wallPosts.size());
+        log.info("existing posts: {}", existingPosts.size());
         List<Integer> postIds = existingPosts.stream().map(WallPost::getPostId).collect(Collectors.toList());
-        return wallPostRepository.saveAll(wallPosts
+        log.info("postIds: {}", postIds);
+        List<WallPost> posts = wallPosts
                 .stream()
-                .filter(w -> !checkIfExists(w.getId(), postIds))
+//                .filter(w -> !checkIfExists(w.getId(), postIds))
                 .map(w -> transform(w, user))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+//        sendToRecognition(posts);
+//        posts
+//                .forEach(p -> p.setText(null));
+        return wallPostRepository.saveAll(posts);
     }
 
     private WallPost transform(WallPostFull wallPostFull, User user) {
@@ -161,7 +170,7 @@ public class ApiServiceImpl extends AbstractApiService {
             return wallPost;
         }
         com.vk.api.sdk.objects.wall.WallPost originalPost = wallPostFull.getCopyHistory().get(0);
-//        wallPost.setText(originalPost.getText());
+        wallPost.setText(originalPost.getText().replaceAll("[^а-яА-Яa-zA-Z0-9 .,]", ""));
         wallPost.setOriginalPostId(originalPost.getId());
         wallPost.setOriginalOwnerPostId(originalPost.getOwnerId());
         wallPost.setPhotos(getWallPostPhotos(originalPost.getAttachments(), wallPost));
@@ -191,7 +200,7 @@ public class ApiServiceImpl extends AbstractApiService {
                     .wall()
                     .get(userActor)
                     .ownerId(userActor.getId())
-                    .count(10)
+                    .count(1)
                     .filter(WallGetFilter.ALL)
                     .execute();
         } catch (ApiException | ClientException e) {
