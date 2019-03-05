@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
+import ru.xpendence.nightwatchobserver.service.UserService;
 
 import java.util.Objects;
 import java.util.Random;
@@ -23,8 +24,8 @@ import java.util.UUID;
 @Slf4j
 public class ApiServiceMock extends AbstractApiService {
 
-    public ApiServiceMock(UserRepository userRepository) {
-        super(userRepository);
+    public ApiServiceMock(UserRepository userRepository, UserService userService) {
+        super(userRepository, userService);
     }
 
     @Override

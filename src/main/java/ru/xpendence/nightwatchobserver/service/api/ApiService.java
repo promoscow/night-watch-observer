@@ -27,4 +27,6 @@ public interface ApiService {
     UserActor getActorByUserId(Long userId);
 
     void send(ToRecognitionDto dto);
+
+    void checkIfUserExists(Integer authResponse, User user);
 }

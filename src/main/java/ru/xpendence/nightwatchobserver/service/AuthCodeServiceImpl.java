@@ -45,6 +45,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         this.accessTokenService = accessTokenService;
     }
 
+    // TODO: 05.03.19 при получении нового code и access_token удаление всех старых для этого пользователя
     @Override
     @Transactional
     public AuthCodeDto save(AuthCodeDto dto) {

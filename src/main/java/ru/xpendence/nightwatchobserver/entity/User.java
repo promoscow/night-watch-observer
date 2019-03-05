@@ -59,6 +59,10 @@ public class User extends AbstractEntity {
         return new User(userId, email, new AccessToken(accessToken, expiresIn));
     }
 
+    public static User of(Integer userId, String email, AccessToken accessToken) {
+        return new User(userId, email, accessToken);
+    }
+
     @Column(name = "user_id")
     public Integer getUserId() {
         return userId;

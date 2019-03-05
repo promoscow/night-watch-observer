@@ -32,7 +32,6 @@ import ru.xpendence.nightwatchobserver.service.UserService;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +47,6 @@ public class ApiServiceImpl extends AbstractApiService {
 
     private final VkApiClient vk;
     private final WallPostRepository wallPostRepository;
-    private final UserService userService;
     private final WallPostPhotoRepository wallPostPhotoRepository;
     private final ObjectMapper objectMapper;
 
@@ -71,10 +69,9 @@ public class ApiServiceImpl extends AbstractApiService {
                           UserService userService,
                           WallPostPhotoRepository wallPostPhotoRepository,
                           ObjectMapper objectMapper) {
-        super(userRepository);
+        super(userRepository, userService);
         this.vk = vk;
         this.wallPostRepository = wallPostRepository;
-        this.userService = userService;
         this.wallPostPhotoRepository = wallPostPhotoRepository;
         this.objectMapper = objectMapper;
     }
@@ -88,8 +85,7 @@ public class ApiServiceImpl extends AbstractApiService {
                 authResponse.getAccessToken(),
                 authResponse.getExpiresIn()
         );
-        Optional<User> alreadyExistingUser = userService.getUserByUserId(authResponse.getUserId());
-        alreadyExistingUser.ifPresent(u -> user.setId(u.getId()));
+        checkIfUserExists(authResponse.getUserId(), user);
         return user;
     }
 
@@ -156,9 +152,6 @@ public class ApiServiceImpl extends AbstractApiService {
 //                .filter(w -> !checkIfExists(w.getId(), postIds))
                 .map(w -> transform(w, user))
                 .collect(Collectors.toList());
-//        sendToRecognition(posts);
-//        posts
-//                .forEach(p -> p.setText(null));
         return wallPostRepository.saveAll(posts);
     }
 

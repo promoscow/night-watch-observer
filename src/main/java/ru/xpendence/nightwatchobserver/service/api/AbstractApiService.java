@@ -8,9 +8,11 @@ import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.exception.UserException;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
+import ru.xpendence.nightwatchobserver.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -23,10 +25,13 @@ import java.util.Objects;
 public abstract class AbstractApiService implements ApiService {
 
     private final UserRepository userRepository;
+    final UserService userService;
 
     @Autowired
-    public AbstractApiService(UserRepository userRepository) {
+    public AbstractApiService(UserRepository userRepository,
+                              UserService userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -46,6 +51,12 @@ public abstract class AbstractApiService implements ApiService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void checkIfUserExists(Integer userId, User user) {
+        Optional<User> alreadyExistingUser = userService.getUserByUserId(userId);
+        alreadyExistingUser.ifPresent(u -> user.setId(u.getId()));
     }
 
     @Override

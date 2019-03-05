@@ -29,7 +29,7 @@ public abstract class AbstractEntity implements Serializable {
     String error;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long getId() {
         return id;
     }
