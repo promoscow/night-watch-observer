@@ -27,6 +27,6 @@ public class AccessTokenDto extends AbstractDto {
     @JsonProperty(value = "user_id")
     private Long userId;
 
-    @JsonProperty(value = "external")
+    @JsonProperty(value = "eternal")
     private Boolean external;
 }

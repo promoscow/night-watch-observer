@@ -8,6 +8,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.time.Clock;
 import java.time.LocalDateTime;
 
 /**
@@ -29,7 +30,7 @@ public class AccessToken extends AbstractEntity {
     private String accessToken;
     private LocalDateTime expiresIn;
     private User user;
-    private Boolean external;
+    private Boolean eternal;
 
     public AccessToken(String accessToken) {
         this.accessToken = accessToken;
@@ -37,7 +38,7 @@ public class AccessToken extends AbstractEntity {
 
     public AccessToken(String accessToken, Integer expiresIn) {
         this.accessToken = accessToken;
-        this.expiresIn = LocalDateTime.now().plusSeconds(expiresIn.longValue());
+        this.expiresIn = LocalDateTime.now(Clock.systemUTC()).plusSeconds(expiresIn.longValue());
     }
 
     @Column(name = "access_token")
@@ -56,8 +57,8 @@ public class AccessToken extends AbstractEntity {
         return user;
     }
 
-    @Column(name = "external")
-    public Boolean getExternal() {
-        return external;
+    @Column(name = "eternal")
+    public Boolean getEternal() {
+        return eternal;
     }
 }

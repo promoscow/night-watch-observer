@@ -32,6 +32,7 @@ import ru.xpendence.nightwatchobserver.service.UserService;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -81,12 +82,15 @@ public class ApiServiceImpl extends AbstractApiService {
     @Override
     public User authorize(String code) {
         UserAuthResponse authResponse = obtainUserAuthResponse(code);
-        return User.of(
+        User user = User.of(
                 authResponse.getUserId(),
                 authResponse.getEmail(),
                 authResponse.getAccessToken(),
                 authResponse.getExpiresIn()
         );
+        Optional<User> alreadyExistingUser = userService.getUserByUserId(authResponse.getUserId());
+        alreadyExistingUser.ifPresent(u -> user.setId(u.getId()));
+        return user;
     }
 
     @Override

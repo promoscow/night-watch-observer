@@ -9,6 +9,7 @@ import ru.xpendence.nightwatchobserver.mapper.UserMapper;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -44,6 +45,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUser(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<User> getUserByUserId(Integer userId) {
+        return repository.findByUserId(userId);
     }
 
     @Override

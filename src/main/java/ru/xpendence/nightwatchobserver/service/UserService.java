@@ -4,6 +4,7 @@ import ru.xpendence.nightwatchobserver.dto.UserDto;
 import ru.xpendence.nightwatchobserver.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -18,6 +19,8 @@ public interface UserService {
     User saveUser(User user);
 
     User getUser(Long id);
+
+    Optional<User> getUserByUserId(Integer userId);
 
     UserDto get(Long id);
 
