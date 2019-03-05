@@ -1,5 +1,6 @@
 package ru.xpendence.nightwatchobserver.service;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.entity.AccessToken;
+import ru.xpendence.nightwatchobserver.entity.AuthCode;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
@@ -27,12 +29,14 @@ public abstract class AbstractServiceTest {
     protected static final String ACCESS_TOKEN;
     protected static final String EMAIL;
     protected static final Integer EXPIRES_IN;
+    protected static final String AUTH_CODE;
 
     static {
         USER_ID = new Random().nextInt(Integer.MAX_VALUE - 1000000) + 1000000;
         ACCESS_TOKEN = UUID.randomUUID().toString();
         EMAIL = String.format("testing%s@gmail.com", new Random().nextInt(10000) + 10000);
         EXPIRES_IN = 43200;
+        AUTH_CODE = RandomStringUtils.randomAlphanumeric(20);
     }
 
     @Autowired
@@ -51,6 +55,8 @@ public abstract class AbstractServiceTest {
     public User createUser(Integer userId, String email, String accessToken, Integer expiresIn) {
         AccessToken token = createAccessToken(accessToken, expiresIn);
         User user = userService.saveUser(User.of(userId, email, token));
+        authCodeService.saveAuthCode(new AuthCode(AUTH_CODE, user));
+
         token.setUser(user);
         accessTokenService.saveAccessToken(token);
         return user;
