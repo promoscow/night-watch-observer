@@ -20,7 +20,7 @@ import java.util.UUID;
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
 @Service
-@Profile(value = {"dev", "local-mock", "remote-mock"})
+@Profile(value = {"dev", "local-mock", "remote-mock", "remote-test"})
 @Slf4j
 public class ApiServiceMock extends AbstractApiService {
 

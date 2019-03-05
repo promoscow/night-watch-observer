@@ -22,4 +22,6 @@ public interface AccessTokenService {
     List<AccessToken> getAllAlive();
 
     void deleteExpired();
+
+    void deleteAllByUserId(Integer userId);
 }

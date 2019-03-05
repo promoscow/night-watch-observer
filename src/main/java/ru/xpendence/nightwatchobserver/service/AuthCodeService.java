@@ -28,4 +28,6 @@ public interface AuthCodeService {
     AuthCodeDto get(Long id);
 
     void deleteUsed();
+
+    void deleteAllAuthCodesForUser(Integer userId);
 }

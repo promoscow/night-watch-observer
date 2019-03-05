@@ -63,6 +63,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
         repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now());
     }
 
+    @Override
+    public void deleteAllByUserId(Integer userId) {
+        repository.deleteAllByUserId(userId);
+    }
+
     private void validateUser(AccessToken accessToken, AccessTokenDto dto) {
         if (Objects.nonNull(dto.getUserId()) && Objects.isNull(userService.getUser(dto.getUserId()))) {
             accessToken.setUser(userService.saveUser(User.ofAccessToken(accessToken)));

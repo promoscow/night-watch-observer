@@ -1,6 +1,7 @@
 package ru.xpendence.nightwatchobserver.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.xpendence.nightwatchobserver.entity.AuthCode;
 
@@ -12,4 +13,8 @@ import ru.xpendence.nightwatchobserver.entity.AuthCode;
  */
 @Repository
 public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
+
+    @Query(value = "delete from auth_codes where auth_codes.user in (select users.id from users where users.user_id = :userId)",
+            nativeQuery = true)
+    void deleteAllByUser(Integer userId);
 }

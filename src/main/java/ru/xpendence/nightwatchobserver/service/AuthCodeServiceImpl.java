@@ -53,6 +53,9 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         AuthCode authCode = mapper.toEntity(dto);
         User user = apiService.authorize(authCode.getCode());
 
+        deleteAllAuthCodesForUser(user.getUserId());
+        accessTokenService.deleteAllByUserId(user.getUserId());
+
         user = userService.saveUser(user);
         authCode.setUser(user);
         authCode = saveAuthCode(authCode);
@@ -63,7 +66,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
         user.setAccessToken(token);
         user.setAuthCode(authCode);
-        user = userService.saveUser(user);
+        userService.saveUser(user);
 
         return mapper.toDto(authCode);
     }
@@ -101,5 +104,10 @@ public class AuthCodeServiceImpl implements AuthCodeService {
                 .stream()
                 .filter(a -> Objects.nonNull(a.getUser().getAccessToken()))
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public void deleteAllAuthCodesForUser(Integer userId) {
+        repository.deleteAllByUser(userId);
     }
 }
