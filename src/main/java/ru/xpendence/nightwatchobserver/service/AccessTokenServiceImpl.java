@@ -54,13 +54,13 @@ public class AccessTokenServiceImpl implements AccessTokenService {
 
     @Override
     public List<AccessToken> getAllAlive() {
-        return repository.findAllByExternalOrExpiresInAfter(true, LocalDateTime.now());
+        return repository.findAllByEternalOrExpiresInAfter(true, LocalDateTime.now());
     }
 
     @Override
 //    @Scheduled(cron = "30 * * * * ?")
     public void deleteExpired() {
-        repository.deleteAllByExternalFalseAndExpiresInBefore(LocalDateTime.now());
+        repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now());
     }
 
     private void validateUser(AccessToken accessToken, AccessTokenDto dto) {

@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * e-mail: 2262288@gmail.com
  */
 @Service
-@Profile({"local", "remote"})
+@Profile({"!dev", "!local-mock", "!remote-mock"})
 @Slf4j
 public class ApiServiceImpl extends AbstractApiService {
 
