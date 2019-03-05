@@ -1,4 +1,4 @@
-package ru.xpendence.nightwatchobserver.service.api;
+package ru.xpendence.nightwatchobserver.service;
 
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +8,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.User;
-import ru.xpendence.nightwatchobserver.service.AccessTokenService;
-import ru.xpendence.nightwatchobserver.service.UserService;
+import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
 import java.util.Random;
 import java.util.UUID;
@@ -24,10 +23,10 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("remote-test")
 public abstract class AbstractServiceTest {
-    static final Integer USER_ID;
-    static final String ACCESS_TOKEN;
-    static final String EMAIL;
-    static final Integer EXPIRES_IN;
+    protected static final Integer USER_ID;
+    protected static final String ACCESS_TOKEN;
+    protected static final String EMAIL;
+    protected static final Integer EXPIRES_IN;
 
     static {
         USER_ID = new Random().nextInt(Integer.MAX_VALUE - 1000000) + 1000000;
@@ -37,16 +36,19 @@ public abstract class AbstractServiceTest {
     }
 
     @Autowired
-    UserService userService;
+    public UserService userService;
 
     @Autowired
-    AccessTokenService accessTokenService;
+    public AccessTokenService accessTokenService;
 
     @Autowired
-    ApiService apiService;
+    public ApiService apiService;
+
+    @Autowired
+    public AuthCodeService authCodeService;
 
     @Transactional
-    User createUser(Integer userId, String email, String accessToken, Integer expiresIn) {
+    public User createUser(Integer userId, String email, String accessToken, Integer expiresIn) {
         AccessToken token = createAccessToken(accessToken, expiresIn);
         User user = userService.saveUser(User.of(userId, email, token));
         token.setUser(user);
@@ -58,7 +60,7 @@ public abstract class AbstractServiceTest {
         return new AccessToken(accessToken, expiresIn);
     }
 
-    String generateAccessToken() {
+    public String generateAccessToken() {
         return UUID.randomUUID().toString();
     }
 }

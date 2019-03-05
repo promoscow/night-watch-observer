@@ -19,6 +19,8 @@ public interface AuthCodeService {
 
     AuthCode saveAuthCode(AuthCode code);
 
+    AuthCode getByUserId(Long userId);
+
     List<AuthCodeDto> getAll();
 
     Page<AuthCodeDto> getAll(Pageable pageable);

@@ -3,6 +3,7 @@ package ru.xpendence.nightwatchobserver.service.api;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.xpendence.nightwatchobserver.entity.User;
+import ru.xpendence.nightwatchobserver.service.AbstractServiceTest;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -10,7 +11,7 @@ import ru.xpendence.nightwatchobserver.entity.User;
  * Time: 15:04
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
-public class ApiServiceImplTest extends AbstractServiceTest {
+public class ApiServiceTest extends AbstractServiceTest {
 
     @Test
     public void authorize_updateDataOfExistingUser() {
