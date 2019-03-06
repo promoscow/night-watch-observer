@@ -48,6 +48,11 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
+    public AccessToken getByUserId(Long userId) {
+        return repository.getByUserId(userId);
+    }
+
+    @Override
     public List<AccessTokenDto> getAll() {
         return repository.findAll().stream().map(mapper::toDto).collect(Collectors.toList());
     }

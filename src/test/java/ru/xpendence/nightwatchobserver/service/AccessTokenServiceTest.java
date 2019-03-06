@@ -1,5 +1,6 @@
 package ru.xpendence.nightwatchobserver.service;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -8,7 +9,7 @@ import org.junit.Test;
  * Time: 18:43
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
-public class AccessTokenServiceImplTest extends AbstractServiceTest {
+public class AccessTokenServiceTest extends AbstractServiceTest {
 
     @Test
     public void save() {
@@ -32,5 +33,9 @@ public class AccessTokenServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void deleteAllByUserId() {
+        Assert.assertNotNull(accessTokenService.getByUserId(user.getId()));
+        accessTokenService.deleteAllByUserId(user.getUserId());
+
+        Assert.assertNull(accessTokenService.getByUserId(user.getId()));
     }
 }

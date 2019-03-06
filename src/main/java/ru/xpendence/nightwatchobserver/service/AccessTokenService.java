@@ -17,6 +17,8 @@ public interface AccessTokenService {
 
     AccessToken saveAccessToken(AccessToken token);
 
+    AccessToken getByUserId(Long userId);
+
     List<AccessTokenDto> getAll();
 
     List<AccessToken> getAllAlive();

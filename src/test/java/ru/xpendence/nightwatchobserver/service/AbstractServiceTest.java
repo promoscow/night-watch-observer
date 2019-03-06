@@ -1,6 +1,7 @@
 package ru.xpendence.nightwatchobserver.service;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -51,9 +52,20 @@ public abstract class AbstractServiceTest {
     @Autowired
     public AuthCodeService authCodeService;
 
+    AuthCode code;
+    AccessToken token;
+    User user;
+
+    @Before
+    public void init() {
+        code = createAuthCode();
+        token = createAccessToken(ACCESS_TOKEN, EXPIRES_IN);
+        user = userService.saveUser(User.of(USER_ID, EMAIL, token));
+    }
+
     @Transactional
     public User createUser(Integer userId, String email, String accessToken, Integer expiresIn) {
-        AccessToken token = createAccessToken(accessToken, expiresIn);
+//        AccessToken token = createAccessToken(accessToken, expiresIn);
         User user = userService.saveUser(User.of(userId, email, token));
         authCodeService.saveAuthCode(new AuthCode(AUTH_CODE, user));
 
@@ -64,6 +76,10 @@ public abstract class AbstractServiceTest {
 
     private AccessToken createAccessToken(String accessToken, Integer expiresIn) {
         return new AccessToken(accessToken, expiresIn);
+    }
+
+    private AuthCode createAuthCode() {
+        return authCodeService.saveAuthCode(new AuthCode(AUTH_CODE));
     }
 
     public String generateAccessToken() {

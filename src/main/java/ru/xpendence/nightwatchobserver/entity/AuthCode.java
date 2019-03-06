@@ -28,6 +28,10 @@ public class AuthCode extends AbstractEntity {
     private String code;
     private User user;
 
+    public AuthCode(String code) {
+        this.code = code;
+    }
+
     @Column(name = "code")
     public String getCode() {
         return code;

@@ -28,4 +28,6 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
             nativeQuery = true)
     @Transactional
     void deleteAllByUserId(Integer userId);
+
+    AccessToken getByUserId(Long userId);
 }
