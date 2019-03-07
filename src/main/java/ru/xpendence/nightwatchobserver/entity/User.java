@@ -63,7 +63,7 @@ public class User extends AbstractEntity {
         return new User(userId, email, accessToken);
     }
 
-    @Column(name = "user_id")
+    @Column(name = "user_id", unique = true)
     public Integer getUserId() {
         return userId;
     }

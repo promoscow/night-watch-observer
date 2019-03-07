@@ -26,13 +26,13 @@ import java.util.UUID;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("remote-test")
 public abstract class AbstractServiceTest {
-    protected static final Integer USER_ID;
-    protected static final String ACCESS_TOKEN;
-    protected static final String EMAIL;
-    protected static final Integer EXPIRES_IN;
-    protected static final String AUTH_CODE;
+    protected final Integer USER_ID;
+    protected final String ACCESS_TOKEN;
+    protected final String EMAIL;
+    protected final Integer EXPIRES_IN;
+    protected final String AUTH_CODE;
 
-    static {
+    {
         USER_ID = new Random().nextInt(Integer.MAX_VALUE - 1000000) + 1000000;
         ACCESS_TOKEN = UUID.randomUUID().toString();
         EMAIL = String.format("testing%s@gmail.com", new Random().nextInt(10000) + 10000);
@@ -52,20 +52,23 @@ public abstract class AbstractServiceTest {
     @Autowired
     public AuthCodeService authCodeService;
 
-    AuthCode code;
-    AccessToken token;
-    User user;
+    protected AuthCode code;
+    protected AccessToken token;
+    protected User user;
 
     @Before
     public void init() {
         code = createAuthCode();
         token = createAccessToken(ACCESS_TOKEN, EXPIRES_IN);
         user = userService.saveUser(User.of(USER_ID, EMAIL, token));
+        token.setUser(user);
+        token = accessTokenService.saveAccessToken(token);
+        code.setUser(user);
+        code = authCodeService.saveAuthCode(code);
     }
 
     @Transactional
     public User createUser(Integer userId, String email, String accessToken, Integer expiresIn) {
-//        AccessToken token = createAccessToken(accessToken, expiresIn);
         User user = userService.saveUser(User.of(userId, email, token));
         authCodeService.saveAuthCode(new AuthCode(AUTH_CODE, user));
 

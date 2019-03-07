@@ -33,6 +33,7 @@ public class AccessTokenServiceTest extends AbstractServiceTest {
 
     @Test
     public void deleteAllByUserId() {
+
         Assert.assertNotNull(accessTokenService.getByUserId(user.getId()));
         accessTokenService.deleteAllByUserId(user.getUserId());
 

@@ -2,7 +2,6 @@ package ru.xpendence.nightwatchobserver.service;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.xpendence.nightwatchobserver.entity.User;
 
 /**
  * Author: Vyacheslav Chernyshov
@@ -25,10 +24,6 @@ public class AuthCodeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getAll1() {
-    }
-
-    @Test
     public void getLast() {
     }
 
@@ -42,9 +37,9 @@ public class AuthCodeServiceTest extends AbstractServiceTest {
 
     @Test
     public void deleteAllAuthCodesForUser() {
-        User user = createUser(USER_ID, EMAIL, ACCESS_TOKEN, EXPIRES_IN);
-        authCodeService.deleteAllAuthCodesForUser(user.getUserId());
 
+        Assert.assertNotNull(authCodeService.getByUserId(user.getId()));
+        authCodeService.deleteAllAuthCodesForUser(user.getUserId());
         Assert.assertNull(authCodeService.getByUserId(user.getId()));
     }
 }
