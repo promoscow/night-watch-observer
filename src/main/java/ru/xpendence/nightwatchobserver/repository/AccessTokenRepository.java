@@ -21,7 +21,7 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
 
     List<AccessToken> findAllByEternalOrExpiresInAfter(boolean eternal, LocalDateTime expiresIn);
 
-    void deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime localDateTime);
+    Integer deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime localDateTime);
 
     @Modifying
     @Query(value = "delete from access_tokens where access_tokens.user_id in (select users.id from users where users.user_id = :userId)",

@@ -1,6 +1,8 @@
 package ru.xpendence.nightwatchobserver.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.entity.AccessToken;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
  * e-mail: vyacheslav.chernyshov@stoloto.ru
  */
 @Service
+@Slf4j
 public class AccessTokenServiceImpl implements AccessTokenService {
 
     private final AccessTokenRepository repository;
@@ -63,9 +66,9 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     }
 
     @Override
-//    @Scheduled(cron = "30 * * * * ?")
+    @Scheduled(cron = "40 * * * * ?")
     public void deleteExpired() {
-        repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now());
+        log.info("Access tokens deleted: {}", repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now()));
     }
 
     @Override

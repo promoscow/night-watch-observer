@@ -2,7 +2,6 @@ package ru.xpendence.nightwatchobserver.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
@@ -26,7 +25,7 @@ public class ObserverService {
         this.apiService = apiService;
     }
 
-    @Scheduled(initialDelay = 10000, fixedDelay = 60000)
+//    @Scheduled(initialDelayString = "${observer.init.delay}", fixedDelayString = "${observer.fixed.delay}")
     public void observe() {
 
         userService.getAllAlive()
