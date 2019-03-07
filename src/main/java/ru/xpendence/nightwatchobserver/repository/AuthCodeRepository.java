@@ -19,7 +19,8 @@ import java.util.List;
 public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
 
     @Modifying
-    @Query(value = "update auth_codes as a set a.active = 0 where a.user in (select users.id from users where users.user_id = :userId)",
+    @Query(value = "update auth_codes as a set a.active = 0 " +
+            "where a.user in (select users.id from users where users.user_id = :userId)",
             nativeQuery = true)
     @Transactional
     void deleteAllByUser(Integer userId);
@@ -30,7 +31,8 @@ public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "update auth_codes as a set a.active = 0 where a.id in (:id)", nativeQuery = true)
+    @Query(value = "update auth_codes as a set a.active = 0 where a.id in (:id)",
+            nativeQuery = true)
     void deleteAllByIdIn(List<Long> id);
 
     AuthCode getAllByUserId(Long userId);
