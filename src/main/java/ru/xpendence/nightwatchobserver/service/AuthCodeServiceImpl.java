@@ -16,7 +16,6 @@ import ru.xpendence.nightwatchobserver.repository.AuthCodeRepository;
 import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -105,14 +104,10 @@ public class AuthCodeServiceImpl implements AuthCodeService {
 
     @Override
     @Scheduled(cron = "20 * * * * ?")
-    @Transactional
     public void deleteUsed() {
-        List<AuthCode> usedCodes = repository.findAll()
-                .stream()
-                .filter(a -> Objects.nonNull(a.getUser().getAccessToken()))
-                .collect(Collectors.toList());
-        repository.deleteAll(usedCodes);
-        log.info("Deleted user authCodes: {}", usedCodes.size());
+        List<Long> usedCodeIds = repository.findAllIdUsed();
+        repository.deleteAllByIdIn(usedCodeIds);
+        log.info("Deleted user authCodes: {}", usedCodeIds.size());
     }
 
     @Override

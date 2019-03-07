@@ -22,6 +22,7 @@ public abstract class AbstractDto implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 
+    // TODO: 07.03.19 не сериализуется в паттерн
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss.SSS")
     LocalDateTime created;

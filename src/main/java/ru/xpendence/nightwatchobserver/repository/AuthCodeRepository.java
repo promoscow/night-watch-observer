@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.entity.AuthCode;
 
+import java.util.List;
+
 /**
  * Author: Vyacheslav Chernyshov
  * Date: 27.02.19
@@ -17,10 +19,19 @@ import ru.xpendence.nightwatchobserver.entity.AuthCode;
 public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
 
     @Modifying
-    @Query(value = "delete from auth_codes where auth_codes.user in (select users.id from users where users.user_id = :userId)",
+    @Query(value = "update auth_codes as a set a.active = 0 where a.user in (select users.id from users where users.user_id = :userId)",
             nativeQuery = true)
     @Transactional
     void deleteAllByUser(Integer userId);
+
+    @Query(value = "select c.id from auth_codes as c where c.user in (select t.user_id from access_tokens as t)",
+            nativeQuery = true)
+    List<Long> findAllIdUsed();
+
+    @Modifying
+    @Transactional
+    @Query(value = "update auth_codes as a set a.active = 0 where a.id in (:id)", nativeQuery = true)
+    void deleteAllByIdIn(List<Long> id);
 
     AuthCode getAllByUserId(Long userId);
 }
