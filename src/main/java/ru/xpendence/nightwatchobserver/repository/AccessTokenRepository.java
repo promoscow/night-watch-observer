@@ -23,6 +23,7 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
 
     Integer deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime localDateTime);
 
+    // TODO: 07.03.19 протестировать удаление на тестовой базе
     @Modifying
     @Query(value = "delete from access_tokens where access_tokens.user_id in (select users.id from users where users.user_id = :userId)",
             nativeQuery = true)
