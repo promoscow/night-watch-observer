@@ -107,7 +107,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     public void deleteUsed() {
         List<Long> usedCodeIds = repository.findAllIdUsed();
         repository.deleteAllByIdIn(usedCodeIds);
-        log.info("Deleted user authCodes: {}", usedCodeIds.size());
+        log.info("Auth codes deleted: {}", usedCodeIds.size());
     }
 
     @Override
