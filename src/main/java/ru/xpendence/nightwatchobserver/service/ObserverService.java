@@ -26,7 +26,10 @@ public class ObserverService {
         this.apiService = apiService;
     }
 
-    @Scheduled(initialDelayString = "${observer.init.delay}", fixedDelayString = "${observer.fixed.delay}")
+    @Scheduled(
+            initialDelayString = "${observer.init.delay}",
+            fixedDelayString = "${observer.fixed.delay}"
+    )
     public void observe() {
 
         userService.getAllAlive()
