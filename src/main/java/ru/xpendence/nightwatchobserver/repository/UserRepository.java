@@ -17,7 +17,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "select * from users as u where u.id in (select a.user_id from access_tokens as a where a.eternal = true or a.expires_in > CURRENT_TIMESTAMP)", nativeQuery = true)
+    @Query(value = "select * from users as u where u.active = 0 and u.id in " +
+            "(select a.user_id from access_tokens as a where a.eternal = true or a.expires_in > CURRENT_TIMESTAMP)",
+            nativeQuery = true
+    )
     List<User> findAllAliveUsers();
 
     Optional<User> findByUserId(Integer userId);

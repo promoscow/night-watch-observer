@@ -26,7 +26,7 @@ public interface AccessTokenRepository extends JpaRepository<AccessToken, Long> 
     // TODO: 07.03.19 протестировать удаление на тестовой базе
     @Modifying
     @Query(value = "update access_tokens as a set a.active = 0 " +
-            "where a.user_id in (select users.id from users where users.user_id = :userId)",
+            "where a.active = 1 and a.user_id in (select users.id from users where users.user_id = :userId)",
             nativeQuery = true)
     @Transactional
     void deleteAllByUserId(Integer userId);

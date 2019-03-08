@@ -197,7 +197,7 @@ public class ApiServiceImpl extends AbstractApiService {
                     .wall()
                     .get(userActor)
                     .ownerId(userActor.getId())
-                    .count(1)
+                    .count(10)
                     .filter(WallGetFilter.ALL)
                     .execute();
         } catch (ApiException | ClientException e) {
