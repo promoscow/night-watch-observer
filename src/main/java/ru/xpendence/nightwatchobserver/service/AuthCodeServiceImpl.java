@@ -102,6 +102,7 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         return null;
     }
 
+    // TODO: 08.03.19 удалять коды при добавлении токена
     @Override
     @Scheduled(cron = "20 * * * * ?")
     public void deleteUsed() {

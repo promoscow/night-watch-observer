@@ -32,6 +32,7 @@ public class ObserverService {
     )
     public void observe() {
 
+        log.info("Observing walls of users.");
         userService.getAllAlive()
                 .forEach(u -> {
                     log.info("Observing user: {}", u.getId());

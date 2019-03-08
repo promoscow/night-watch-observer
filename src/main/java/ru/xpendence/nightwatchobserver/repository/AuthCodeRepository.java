@@ -20,18 +20,19 @@ public interface AuthCodeRepository extends JpaRepository<AuthCode, Long> {
 
     @Modifying
     @Query(value = "update auth_codes as a set a.active = 0 " +
-            "where a.active = 0 and a.user in (select users.id from users where users.user_id = :userId)",
+            "where a.active = 1 and a.user in (select users.id from users where users.user_id = :userId)",
             nativeQuery = true)
     @Transactional
     void deleteAllByUser(Integer userId);
 
-    @Query(value = "select c.id from auth_codes as c where c.active = 0 and c.user in (select t.user_id from access_tokens as t)",
+    @Query(value = "select c.id from auth_codes as c where c.active = 1 and c.user in (select t.user_id from access_tokens as t)",
             nativeQuery = true)
     List<Long> findAllIdUsed();
 
+    // TODO: 08.03.19 разобраться, почему валится при вставке where a.active = 1 and
     @Modifying
     @Transactional
-    @Query(value = "update auth_codes as a set a.active = 0 where a.active = 0 and a.id in (:id)",
+    @Query(value = "update auth_codes as a set a.active = 0 where a.id in (:id)",
             nativeQuery = true)
     void deleteAllByIdIn(List<Long> id);
 
