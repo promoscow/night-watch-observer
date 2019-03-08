@@ -102,13 +102,15 @@ public class AuthCodeServiceImpl implements AuthCodeService {
         return null;
     }
 
-    // TODO: 08.03.19 удалять коды при добавлении токена
+    // TODO: 08.03.19 удалять коды при добавлении токена, записывать при неудачной попытке получить токен
     @Override
     @Scheduled(cron = "20 * * * * ?")
     public void deleteUsed() {
         List<Long> usedCodeIds = repository.findAllIdUsed();
-        repository.deleteAllByIdIn(usedCodeIds);
-        log.info("Auth codes deleted: {}", usedCodeIds.size());
+        if (!usedCodeIds.isEmpty()) {
+            repository.deleteAllByIdIn(usedCodeIds);
+            log.info("Auth codes deleted: {}", usedCodeIds.size());
+        }
     }
 
     @Override

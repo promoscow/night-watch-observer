@@ -100,8 +100,10 @@ public class ApiServiceImpl extends AbstractApiService {
         List<WallPost> existingPosts = wallPostRepository.findAllByUserId(userId);
         User user = userService.getById(userId);
         List<WallPost> posts = transformPosts(wallPosts, existingPosts, user);
-        log.info("< --- preparing to send {} posts", posts.size());
-        sendToRecognition(posts);
+        if (!posts.isEmpty()) {
+            log.info("< --- preparing to send {} posts", posts.size());
+            sendToRecognition(posts);
+        }
         return !posts.isEmpty();
     }
 

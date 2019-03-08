@@ -68,7 +68,10 @@ public class AccessTokenServiceImpl implements AccessTokenService {
     @Override
     @Scheduled(cron = "40 * * * * ?")
     public void deleteExpired() {
-        log.info("Access tokens deleted: {}", repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now()));
+        Integer countOfDeleted = repository.deleteAllByEternalFalseAndExpiresInBefore(LocalDateTime.now());
+        if (countOfDeleted > 0) {
+            log.info("Access tokens deleted: {}", countOfDeleted);
+        }
     }
 
     @Override
