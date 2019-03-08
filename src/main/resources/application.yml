@@ -3,5 +3,10 @@ spring:
   profiles:
     active: remote
 
+#  banner:
+#    image:
+#      location: logo.png
+
+
 server:
   port: 8081
