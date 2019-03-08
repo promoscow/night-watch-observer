@@ -149,7 +149,7 @@ public class ApiServiceImpl extends AbstractApiService {
         log.info("postIds: {}", postIds);
         List<WallPost> posts = wallPosts
                 .stream()
-//                .filter(w -> !checkIfExists(w.getId(), postIds))
+                .filter(w -> !checkIfExists(w.getId(), postIds))
                 .map(w -> transform(w, user))
                 .collect(Collectors.toList());
         return wallPostRepository.saveAll(posts);
