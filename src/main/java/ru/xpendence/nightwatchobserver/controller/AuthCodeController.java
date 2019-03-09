@@ -7,6 +7,7 @@ import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
 import ru.xpendence.nightwatchobserver.service.AccessTokenService;
 import ru.xpendence.nightwatchobserver.service.AuthCodeService;
+import ru.xpendence.nightwatchobserver.service.api.ApiService;
 
 import java.util.List;
 
@@ -22,17 +23,20 @@ public class AuthCodeController {
 
     private final AuthCodeService service;
     private final AccessTokenService accessTokenService;
+    private final ApiService apiService;
 
     @Autowired
     public AuthCodeController(AuthCodeService service,
-                              AccessTokenService accessTokenService) {
+                              AccessTokenService accessTokenService,
+                              ApiService apiService) {
         this.service = service;
         this.accessTokenService = accessTokenService;
+        this.apiService = apiService;
     }
 
     @GetMapping(value = "/save")
-    public ResponseEntity<AuthCodeDto> save(@RequestParam(name = "code", required = false) String code) {
-        return ResponseEntity.ok(service.save(AuthCodeDto.of(code)));
+    public ResponseEntity<AccessTokenDto> save(@RequestParam("code") String code) {
+        return ResponseEntity.ok(apiService.authByCode(code));
     }
 
     @PostMapping(value = "/save")

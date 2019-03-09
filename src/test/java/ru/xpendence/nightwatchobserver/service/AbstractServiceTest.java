@@ -82,7 +82,7 @@ public abstract class AbstractServiceTest {
     }
 
     private AuthCode createAuthCode() {
-        return authCodeService.saveAuthCode(new AuthCode(AUTH_CODE));
+        return authCodeService.saveAuthCode(AuthCode.of(AUTH_CODE));
     }
 
     public String generateAccessToken() {

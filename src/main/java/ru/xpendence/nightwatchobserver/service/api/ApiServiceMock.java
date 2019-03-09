@@ -4,6 +4,7 @@ import com.vk.api.sdk.client.actors.UserActor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
 import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
@@ -37,6 +38,12 @@ public class ApiServiceMock extends AbstractApiService {
 
     @Override
     public void send(ToRecognitionDto dto) {
+    }
+
+    // TODO: 09.03.19 написать реализацию заглушки
+    @Override
+    public AccessTokenDto authByCode(String code) {
+        return null;
     }
 
     @Override

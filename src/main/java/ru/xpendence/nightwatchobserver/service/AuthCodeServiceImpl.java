@@ -4,13 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.xpendence.nightwatchobserver.dto.AuthCodeDto;
-import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.AuthCode;
-import ru.xpendence.nightwatchobserver.entity.User;
 import ru.xpendence.nightwatchobserver.mapper.AuthCodeMapper;
 import ru.xpendence.nightwatchobserver.repository.AuthCodeRepository;
 import ru.xpendence.nightwatchobserver.service.api.ApiService;
@@ -48,33 +46,14 @@ public class AuthCodeServiceImpl implements AuthCodeService {
     }
 
     @Override
-    @Transactional
-    public AuthCodeDto save(AuthCodeDto dto) {
-
-        AuthCode authCode = mapper.toEntity(dto);
-        User user = apiService.authorize(authCode.getCode());
-
-        deleteAllAuthCodesForUser(user.getUserId());
-        accessTokenService.deleteAllByUserId(user.getUserId());
-
-        user = userService.saveUser(user);
-        authCode.setUser(user);
-        authCode = saveAuthCode(authCode);
-
-        AccessToken accessToken = user.getAccessToken();
-        accessToken.setUser(user);
-        AccessToken token = accessTokenService.saveAccessToken(accessToken);
-
-        user.setAccessToken(token);
-        user.setAuthCode(authCode);
-        userService.saveUser(user);
-
-        return mapper.toDto(authCode);
+    public AuthCode saveAuthCode(AuthCode code) {
+        return repository.saveAndFlush(code);
     }
 
     @Override
-    public AuthCode saveAuthCode(AuthCode code) {
-        return repository.saveAndFlush(code);
+    @Async
+    public void saveAuthCodeAsync(AuthCode code) {
+        repository.saveAndFlush(code);
     }
 
     @Override

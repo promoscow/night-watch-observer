@@ -2,6 +2,7 @@ package ru.xpendence.nightwatchobserver.service.api;
 
 import com.vk.api.sdk.client.actors.UserActor;
 import org.springframework.transaction.annotation.Transactional;
+import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
 import ru.xpendence.nightwatchobserver.entity.AccessToken;
 import ru.xpendence.nightwatchobserver.entity.User;
@@ -13,6 +14,8 @@ import ru.xpendence.nightwatchobserver.entity.User;
  * e-mail: 2262288@gmail.com
  */
 public interface ApiService {
+
+    AccessTokenDto authByCode(String code);
 
     User authorize(String code);
 

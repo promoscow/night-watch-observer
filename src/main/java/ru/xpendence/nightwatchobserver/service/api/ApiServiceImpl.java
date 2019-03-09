@@ -19,15 +19,18 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import ru.xpendence.nightwatchobserver.dto.AccessTokenDto;
 import ru.xpendence.nightwatchobserver.dto.ToRecognitionDto;
-import ru.xpendence.nightwatchobserver.entity.User;
-import ru.xpendence.nightwatchobserver.entity.WallPost;
-import ru.xpendence.nightwatchobserver.entity.WallPostPhoto;
+import ru.xpendence.nightwatchobserver.entity.*;
 import ru.xpendence.nightwatchobserver.exception.AuthException;
+import ru.xpendence.nightwatchobserver.mapper.AccessTokenMapper;
 import ru.xpendence.nightwatchobserver.repository.UserRepository;
 import ru.xpendence.nightwatchobserver.repository.WallPostPhotoRepository;
 import ru.xpendence.nightwatchobserver.repository.WallPostRepository;
+import ru.xpendence.nightwatchobserver.service.AccessTokenService;
+import ru.xpendence.nightwatchobserver.service.AuthCodeService;
 import ru.xpendence.nightwatchobserver.service.UserService;
 
 import java.util.List;
@@ -49,6 +52,9 @@ public class ApiServiceImpl extends AbstractApiService {
     private final WallPostRepository wallPostRepository;
     private final WallPostPhotoRepository wallPostPhotoRepository;
     private final ObjectMapper objectMapper;
+    private final AuthCodeService authCodeService;
+    private final AccessTokenService accessTokenService;
+    private final AccessTokenMapper accessTokenMapper;
 
     @Value("${app.id}")
     private Integer appId;
@@ -68,12 +74,38 @@ public class ApiServiceImpl extends AbstractApiService {
                           WallPostRepository wallPostRepository,
                           UserService userService,
                           WallPostPhotoRepository wallPostPhotoRepository,
-                          ObjectMapper objectMapper) {
+                          ObjectMapper objectMapper,
+                          AuthCodeService authCodeService,
+                          AccessTokenService accessTokenService,
+                          AccessTokenMapper accessTokenMapper) {
         super(userRepository, userService);
         this.vk = vk;
         this.wallPostRepository = wallPostRepository;
         this.wallPostPhotoRepository = wallPostPhotoRepository;
         this.objectMapper = objectMapper;
+        this.authCodeService = authCodeService;
+        this.accessTokenService = accessTokenService;
+        this.accessTokenMapper = accessTokenMapper;
+    }
+
+    @Override
+    @Transactional
+    public AccessTokenDto authByCode(String code) {
+        User user = authorize(code);
+
+        authCodeService.deleteAllAuthCodesForUser(user.getUserId());
+        accessTokenService.deleteAllByUserId(user.getUserId());
+
+        user = userService.saveUser(user);
+
+        AccessToken accessToken = user.getAccessToken();
+        accessToken.setUser(user);
+        AccessToken token = accessTokenService.saveAccessToken(accessToken);
+
+        user.setAccessToken(token);
+        userService.saveUser(user);
+
+        return accessTokenMapper.toDto(token);
     }
 
     @Override
@@ -215,6 +247,7 @@ public class ApiServiceImpl extends AbstractApiService {
                     .userAuthorizationCodeFlow(appId, clientSecret, redirectUri, code)
                     .execute();
         } catch (ApiException | ClientException e) {
+            authCodeService.saveAuthCodeAsync(AuthCode.of(code));
             e.printStackTrace();
             throw new AuthException(String.format(
                     "Unable to auth with\n\tAPP_ID: %d\n\tCLIENT_SECRET: %s\n\tREDIRECT_URI: %s",

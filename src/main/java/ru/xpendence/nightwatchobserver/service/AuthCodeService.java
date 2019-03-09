@@ -15,9 +15,9 @@ import java.util.List;
  */
 public interface AuthCodeService {
 
-    AuthCodeDto save(AuthCodeDto dto);
-
     AuthCode saveAuthCode(AuthCode code);
+
+    void saveAuthCodeAsync(AuthCode code);
 
     AuthCode getByUserId(Long userId);
 
