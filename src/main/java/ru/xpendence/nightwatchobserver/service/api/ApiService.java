@@ -39,6 +39,12 @@ public interface ApiService {
      */
     User authorize(String code);
 
+    /**
+     * Сканирование стены пользователя для выявления новых постов на стене.
+     *
+     * @param userId ID пользователя в БД приложения.
+     * @return удачное сканирование или нет.
+     */
     @Transactional
     Boolean scan(Long userId);
 
