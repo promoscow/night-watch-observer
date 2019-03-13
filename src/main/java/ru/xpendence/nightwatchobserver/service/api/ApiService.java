@@ -53,6 +53,12 @@ public interface ApiService {
      */
     boolean validateAccessToken(AccessToken accessToken);
 
+    /**
+     * Получение актора по ID пользователя.
+     *
+     * Актор — это объект, содержащий детали, необходимые для того, чтобы от имени пользователя производились различные
+     * действия.
+     */
     UserActor getActorByUserId(Long userId);
 
     void send(ToRecognitionDto dto);
