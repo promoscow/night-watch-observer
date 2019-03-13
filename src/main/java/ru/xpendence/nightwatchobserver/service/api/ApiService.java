@@ -48,6 +48,9 @@ public interface ApiService {
     @Transactional
     Boolean scan(Long userId);
 
+    /**
+     * Метод определяет, не истёк ли срок годности у токена. Если истёк, сервис запускает процесс получения нового токена.
+     */
     boolean validateAccessToken(AccessToken accessToken);
 
     UserActor getActorByUserId(Long userId);

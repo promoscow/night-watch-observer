@@ -40,11 +40,13 @@ public abstract class AbstractApiService implements ApiService {
                 () -> new UserException(String.format("No such user with id: %d", userId))
         );
         if (!validateAccessToken(user.getAccessToken())) {
+            // TODO: 13.03.19 написать реализацию обновления токена
             return null;
         }
         return new UserActor(user.getUserId(), user.getAccessToken().getAccessToken());
     }
 
+    @Override
     public boolean validateAccessToken(AccessToken accessToken) {
         if (Objects.nonNull(accessToken.getExpiresIn()) && accessToken.getExpiresIn().isBefore(LocalDateTime.now())) {
             log.error("Access token expired for user {}", accessToken.getUser().getUserId());
