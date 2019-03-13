@@ -48,9 +48,6 @@ public interface ApiService {
     @Transactional
     Boolean scan(Long userId);
 
-    @Transactional
-    void scanAll();
-
     boolean validateAccessToken(AccessToken accessToken);
 
     UserActor getActorByUserId(Long userId);

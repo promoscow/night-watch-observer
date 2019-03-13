@@ -58,9 +58,4 @@ public abstract class AbstractApiService implements ApiService {
         Optional<User> alreadyExistingUser = userService.getUserByUserId(userId);
         alreadyExistingUser.ifPresent(u -> user.setId(u.getId()));
     }
-
-    @Override
-    public void scanAll() {
-
-    }
 }
